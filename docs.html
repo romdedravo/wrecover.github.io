@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation — wrecover</title>
+    <meta name="description" content="Complete wrecover documentation hub. Find guides for all 10 recovery modes, quick reference, decision helper, and command reference.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+
+        /* ── Anti-overflow global (mobile) ──────────────────── */
+        html, body {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+        *, *::before, *::after {
+            max-width: 100%;
+        }
+        img, video, svg, canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        @media (max-width: 860px) {
+            .container,
+            .doc-section,
+            .main-content,
+            .page-wrapper,
+            .doc-body {
+                box-sizing: border-box;
+                max-width: 100vw;
+            }
+            /* Code blocks: scrollable horizontally inside, don't bleed out */
+            .code-block {
+                max-width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                word-break: normal;
+                white-space: pre;
+            }
+            .code-block code {
+                display: block;
+                white-space: pre;
+            }
+            /* Tables: scrollable inside wrapper */
+            table {
+                display: block;
+                max-width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            /* Info / warning / success boxes */
+            .info-box, .warning-box, .success-box, .notice-box {
+                box-sizing: border-box;
+                max-width: 100%;
+                overflow-wrap: break-word;
+                word-break: break-word;
+            }
+            /* Long words and URLs */
+            p, li, td, th {
+                overflow-wrap: break-word;
+                word-break: break-word;
+            }
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary-dark:   #0a0e27;
+            --secondary-dark: #141b3d;
+            --accent-cyan:    #00d9ff;
+            --accent-gold:    #ffd700;
+            --accent-green:   #00ff88;
+            --accent-purple:  #a855f7;
+            --text-primary:   #e8e8f0;
+            --text-secondary: #9ca3af;
+            --border-color:   #1e2947;
+            --card-bg:        #0f1535;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: var(--primary-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Background */
+        .bg-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image:
+                linear-gradient(rgba(0,217,255,.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,217,255,.03) 1px, transparent 1px);
+            background-size: 50px 50px; z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+        @keyframes gridMove { 100% { transform: translate(50px,50px); } }
+
+        /* ── Nav ─────────────────────────────────────────── */
+        header {
+            position: sticky; top: 0;
+            background: rgba(10,14,39,.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000; padding: .9rem 0;
+        }
+        nav {
+            max-width: 1400px; margin: 0 auto;
+            padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+        }
+        .logo {
+            font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-cyan), #0066ff);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-decoration: none; display: flex; align-items: center; gap: .4rem; flex-shrink: 0;
+        }
+        .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color .3s; font-size: .95rem; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); }
+
+        /* ── Layout: sidebar + content ──────────────────── */
+        .docs-wrapper {
+            max-width: 1400px; margin: 0 auto;
+            display: grid; grid-template-columns: 260px 1fr;
+            gap: 0; min-height: calc(100vh - 60px);
+        }
+
+        /* ── Sidebar ─────────────────────────────────────── */
+        .sidebar {
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 1.2rem;
+            position: sticky; top: 60px;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+        }
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+        .sidebar-section { margin-bottom: 1.8rem; }
+        .sidebar-label {
+            font-family: 'JetBrains Mono', monospace; font-size: .7rem;
+            color: var(--text-secondary); letter-spacing: 2px; text-transform: uppercase;
+            padding: 0 .5rem; margin-bottom: .6rem; display: block;
+        }
+        .sidebar-link {
+            display: flex; align-items: center; gap: .6rem;
+            padding: .5rem .7rem; border-radius: 8px;
+            color: var(--text-secondary); text-decoration: none; font-size: .88rem;
+            transition: all .2s; border: 1px solid transparent; margin-bottom: 2px;
+        }
+        .sidebar-link:hover { color: var(--text-primary); background: rgba(255,255,255,.04); }
+        .sidebar-link.active {
+            color: var(--accent-cyan); background: rgba(0,217,255,.08);
+            border-color: rgba(0,217,255,.2);
+        }
+        .sidebar-link .mode-badge {
+            font-family: 'JetBrains Mono', monospace; font-size: .68rem;
+            background: rgba(0,217,255,.12); color: var(--accent-cyan);
+            padding: .1rem .4rem; border-radius: 4px; flex-shrink: 0; margin-left: auto;
+        }
+        .sidebar-link .mode-badge.gold  { background: rgba(255,215,0,.12); color: var(--accent-gold); }
+        .sidebar-link .mode-badge.green { background: rgba(0,255,136,.12); color: var(--accent-green); }
+        .sidebar-link .mode-badge.purple { background: rgba(168,85,247,.12); color: var(--accent-purple); }
+        .sidebar-divider { height: 1px; background: var(--border-color); margin: 1rem 0; }
+
+        /* ── Main content ─────────────────────────────────── */
+        .main-content { padding: 1.5rem 1.5rem 5rem; }
+
+        /* ── Hero banner ─────────────────────────────────── */
+        .docs-hero {
+            background: linear-gradient(135deg, rgba(0,217,255,.06) 0%, rgba(0,102,255,.04) 100%);
+            border: 1px solid rgba(0,217,255,.15); border-radius: 20px;
+            padding: 3rem; margin-bottom: 3rem;
+            display: flex; align-items: center; gap: 3rem;
+        }
+        .docs-hero-text { flex: 1; }
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace; font-size: .8rem;
+            color: var(--accent-cyan); letter-spacing: 3px; text-transform: uppercase;
+            margin-bottom: .8rem;
+        }
+        .docs-hero h1 {
+            font-family: 'Orbitron', sans-serif; font-size: 2.6rem; font-weight: 900;
+            line-height: 1.15; margin-bottom: 1rem;
+        }
+        .docs-hero h1 span { color: var(--accent-cyan); }
+        .docs-hero p { color: var(--text-secondary); font-size: 1rem; max-width: 540px; }
+        .docs-hero-stats {
+            display: flex; flex-direction: column; gap: 1rem;
+            flex-shrink: 0;
+        }
+        .stat-item { text-align: center; }
+        .stat-num {
+            font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 900;
+            color: var(--accent-cyan); display: block; line-height: 1;
+        }
+        .stat-label { font-size: .78rem; color: var(--text-secondary); letter-spacing: 1px; text-transform: uppercase; }
+
+        /* Search bar */
+        .search-bar {
+            position: relative; margin-bottom: 3rem;
+        }
+        .search-bar input {
+            width: 100%; padding: .9rem 1rem .9rem 3rem;
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 10px; color: var(--text-primary); font-size: .95rem;
+            font-family: 'IBM Plex Sans', sans-serif; outline: none; transition: border-color .3s;
+        }
+        .search-bar input:focus { border-color: rgba(0,217,255,.5); }
+        .search-bar input::placeholder { color: var(--text-secondary); }
+        .search-icon {
+            position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+            color: var(--text-secondary); font-size: 1rem;
+        }
+        #search-results-count {
+            position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+            font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: var(--text-secondary);
+        }
+
+        /* ── Section heading ─────────────────────────────── */
+        .section-heading {
+            display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
+        }
+        .section-heading h2 {
+            font-family: 'Orbitron', sans-serif; font-size: 1.3rem; color: var(--text-primary);
+        }
+        .section-heading .section-line {
+            flex: 1; height: 1px; background: var(--border-color);
+        }
+        .section-heading .section-count {
+            font-family: 'JetBrains Mono', monospace; font-size: .75rem;
+            color: var(--text-secondary); background: var(--card-bg);
+            border: 1px solid var(--border-color); padding: .2rem .6rem; border-radius: 20px;
+        }
+
+        /* ── Doc cards ───────────────────────────────────── */
+        .cards-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.2rem; margin-bottom: 3.5rem;
+        }
+        .doc-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 14px; padding: 1.6rem;
+            text-decoration: none; color: inherit;
+            transition: all .25s; display: flex; flex-direction: column; gap: .8rem;
+            position: relative; overflow: hidden;
+        }
+        .doc-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 3px; background: var(--card-accent, var(--accent-cyan));
+            transform: scaleX(0); transform-origin: left; transition: transform .3s;
+        }
+        .doc-card:hover { border-color: var(--card-accent, var(--accent-cyan)); transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,.3); }
+        .doc-card:hover::before { transform: scaleX(1); }
+
+        .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+        .card-icon {
+            font-size: 1.8rem; width: 48px; height: 48px; border-radius: 12px;
+            background: rgba(255,255,255,.04); border: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .card-meta { text-align: right; }
+        .card-mode {
+            font-family: 'JetBrains Mono', monospace; font-size: .72rem;
+            padding: .2rem .6rem; border-radius: 4px;
+            display: inline-block; margin-bottom: .3rem;
+        }
+        .card-mode.cyan   { background: rgba(0,217,255,.1);  color: var(--accent-cyan);   border: 1px solid rgba(0,217,255,.25); }
+        .card-mode.gold   { background: rgba(255,215,0,.1);  color: var(--accent-gold);   border: 1px solid rgba(255,215,0,.25); }
+        .card-mode.green  { background: rgba(0,255,136,.1);  color: var(--accent-green);  border: 1px solid rgba(0,255,136,.25); }
+        .card-mode.purple { background: rgba(168,85,247,.1); color: var(--accent-purple); border: 1px solid rgba(168,85,247,.25); }
+
+        .card-difficulty { font-size: .72rem; color: var(--text-secondary); }
+
+        .doc-card h3 {
+            font-family: 'Orbitron', sans-serif; font-size: .95rem;
+            color: var(--text-primary); line-height: 1.3;
+        }
+        .doc-card p { color: var(--text-secondary); font-size: .85rem; line-height: 1.6; flex: 1; }
+
+        .card-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+        .card-tag {
+            font-size: .72rem; padding: .15rem .5rem; border-radius: 20px;
+            background: rgba(255,255,255,.05); color: var(--text-secondary);
+            border: 1px solid rgba(255,255,255,.08);
+        }
+        .card-arrow {
+            margin-top: .4rem; color: var(--accent-cyan); font-size: .85rem;
+            font-family: 'JetBrains Mono', monospace; opacity: 0; transition: opacity .25s;
+        }
+        .doc-card:hover .card-arrow { opacity: 1; }
+
+        /* ── Decision helper ─────────────────────────────── */
+        .decision-section { margin-bottom: 3.5rem; }
+        .decision-table {
+            width: 100%; border-collapse: collapse;
+            font-size: .9rem; background: var(--card-bg);
+            border: 1px solid var(--border-color); border-radius: 14px; overflow: hidden;
+        }
+        .decision-table thead th {
+            background: var(--secondary-dark);
+            color: var(--accent-cyan); font-family: 'JetBrains Mono', monospace;
+            font-size: .78rem; text-transform: uppercase; letter-spacing: 1px;
+            padding: .9rem 1.2rem; text-align: left;
+        }
+        .decision-table tbody td {
+            padding: .85rem 1.2rem; border-top: 1px solid var(--border-color);
+            vertical-align: middle; color: var(--text-secondary);
+        }
+        .decision-table tbody td:first-child { color: var(--text-primary); font-weight: 500; }
+        .decision-table tbody tr:hover td { background: rgba(255,255,255,.02); }
+        .decision-table a {
+            color: var(--accent-cyan); text-decoration: none; font-family: 'JetBrains Mono', monospace;
+            font-size: .8rem; background: rgba(0,217,255,.08); border: 1px solid rgba(0,217,255,.2);
+            padding: .2rem .6rem; border-radius: 5px; transition: all .2s; white-space: nowrap;
+        }
+        .decision-table a:hover { background: rgba(0,217,255,.18); }
+
+        /* ── Quick reference ─────────────────────────────── */
+        .qr-section { margin-bottom: 3.5rem; }
+        .qr-table {
+            width: 100%; border-collapse: collapse; font-size: .88rem;
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 14px; overflow: hidden;
+        }
+        .qr-table thead th {
+            background: var(--secondary-dark); color: var(--accent-green);
+            font-family: 'JetBrains Mono', monospace; font-size: .75rem;
+            text-transform: uppercase; letter-spacing: 1px; padding: .9rem 1.2rem; text-align: left;
+        }
+        .qr-table tbody td {
+            padding: .75rem 1.2rem; border-top: 1px solid var(--border-color);
+            vertical-align: middle; color: var(--text-secondary);
+        }
+        .qr-table tbody tr:hover td { background: rgba(0,255,136,.03); }
+        code {
+            font-family: 'JetBrains Mono', monospace; font-size: .82rem;
+            background: rgba(0,255,136,.07); border: 1px solid rgba(0,255,136,.15);
+            padding: .15rem .45rem; border-radius: 4px; color: var(--accent-green);
+        }
+
+        /* ── Compatibility matrix ────────────────────────── */
+        .compat-section { margin-bottom: 3.5rem; }
+        .compat-table {
+            width: 100%; border-collapse: collapse; font-size: .85rem;
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 14px; overflow: hidden;
+        }
+        .compat-table thead th {
+            background: var(--secondary-dark);
+            color: var(--text-secondary); font-family: 'JetBrains Mono', monospace;
+            font-size: .74rem; text-transform: uppercase; letter-spacing: 1px;
+            padding: .9rem .8rem; text-align: center;
+        }
+        .compat-table thead th:first-child { text-align: left; }
+        .compat-table tbody td {
+            padding: .7rem .8rem; border-top: 1px solid var(--border-color);
+            text-align: center; color: var(--text-secondary); font-size: .8rem;
+        }
+        .compat-table tbody td:first-child { text-align: left; color: var(--text-primary); font-size: .85rem; }
+        .compat-table tbody tr:hover td { background: rgba(255,255,255,.02); }
+        .compat-yes   { color: var(--accent-green); font-size: 1.1rem; }
+        .compat-no    { color: #555; font-size: 1rem; }
+        .compat-part  { color: var(--accent-gold); font-size: .75rem; font-family: 'JetBrains Mono', monospace; }
+
+        /* ── No results ──────────────────────────────────── */
+        #no-results {
+            display: none; text-align: center; padding: 3rem;
+            color: var(--text-secondary);
+        }
+        #no-results .nr-icon { font-size: 3rem; display: block; margin-bottom: 1rem; }
+
+        /* ── Footer ──────────────────────────────────────── */
+        .main-footer {
+            border-top: 1px solid var(--border-color);
+            padding: 2rem; text-align: center;
+        }
+        .main-footer p { color: var(--text-secondary); font-size: .88rem; }
+        .main-footer a { color: var(--accent-cyan); text-decoration: none; }
+
+        /* ── Responsive ──────────────────────────────────── */
+        @media (max-width: 960px) {
+            .docs-wrapper { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .main-content { padding: 2rem 1.5rem; }
+            .docs-hero { flex-direction: column; gap: 1.5rem; }
+            .docs-hero-stats { flex-direction: row; justify-content: center; }
+        }
+    
+        @media (max-width: 680px) {
+            .docs-hero {
+                padding: 1.5rem;
+            }
+            .docs-hero h1 {
+                font-size: 1.6rem;
+            }
+            .main-content {
+                padding: 1.5rem 1rem;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            /* ── decision-table → card layout on mobile ── */
+            .decision-table {
+                font-size: 0.85rem;
+                border: none;
+                background: transparent;
+            }
+            .decision-table thead {
+                display: none;
+            }
+            .decision-table tbody tr {
+                display: block;
+                background: var(--card-bg);
+                border: 1px solid var(--border-color);
+                border-radius: 10px;
+                margin-bottom: 0.9rem;
+                padding: 0;
+                overflow: hidden;
+            }
+            .decision-table tbody td {
+                display: flex;
+                flex-direction: column;
+                padding: 0.55rem 1rem;
+                border-top: 1px solid rgba(255,255,255,0.04);
+                border-right: none;
+                text-align: left;
+            }
+            .decision-table tbody td:first-child {
+                border-top: none;
+                font-size: 0.92rem;
+                padding: 0.75rem 1rem 0.55rem;
+            }
+            .decision-table tbody td::before {
+                content: attr(data-label);
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.67rem;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                color: var(--accent-cyan);
+                opacity: 0.7;
+                margin-bottom: 0.25rem;
+            }
+            .decision-table tbody td:first-child::before {
+                content: attr(data-label);
+                color: var(--text-secondary);
+            }
+            .decision-table tbody td:last-child {
+                background: rgba(0,217,255,0.04);
+                border-top: 1px solid rgba(0,217,255,0.12);
+                padding: 0.65rem 1rem 0.75rem;
+            }
+
+            /* qr + compat stay scroll */
+            .qr-table,
+            .compat-table {
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                font-size: 0.82rem;
+            }
+            .qr-table thead th,
+            .compat-table thead th {
+                font-size: 0.72rem;
+                padding: 0.6rem 0.8rem;
+            }
+            .qr-table tbody td,
+            .compat-table tbody td {
+                padding: 0.6rem 0.8rem;
+            }
+            .section-heading h2 {
+                font-size: 1rem;
+            }
+            .search-bar input {
+                font-size: 0.85rem;
+            }
+        }
+    
+        /* ── Mobile hamburger (desktop inchangé) ───────────── */
+        .hamburger {
+            display: none; flex-direction: column; justify-content: space-between;
+            width: 26px; height: 18px; cursor: pointer; background: none;
+            border: none; padding: 0; flex-shrink: 0;
+             z-index: 1100;
+        }
+        .hamburger span {
+            display: block; width: 100%; height: 1.5px;
+            background: var(--accent-cyan, #00d9ff); border-radius: 2px;
+            transition: transform .35s ease, opacity .35s ease; transform-origin: center;
+        }
+        .hamburger.open span:nth-child(1) { transform: translateY(8.25px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .hamburger.open span:nth-child(3) { transform: translateY(-8.25px) rotate(-45deg); }
+        .nav-overlay { display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,.55); z-index: 800; }
+        .nav-overlay.active { display: block; }
+        @media (max-width: 860px) {
+            .hamburger { display: flex; }
+            .nav-links {
+                position: fixed; top: 0; right: 0; height: 100vh;
+                width: min(280px, 80vw);
+                background: rgba(10,14,39,.98);
+                flex-direction: column; align-items: flex-start;
+                gap: 0; padding: 5rem 2rem 2rem;
+                border-left: 1px solid var(--border-color);
+                transform: translateX(110%);
+                visibility: hidden;                    /* ← AJOUTER */
+                transition: transform 0.4s cubic-bezier(0.4,0,0.2,1),
+                            visibility 0s linear 0.4s; /* ← AJOUTER (délai = durée anim) */
+                z-index: 1050;
+            }
+            .nav-links.nav-open {
+                transform: translateX(0);
+                visibility: visible;                   /* ← AJOUTER */
+                transition: transform 0.4s cubic-bezier(0.4,0,0.2,1),
+                            visibility 0s linear 0s;   /* ← AJOUTER (pas de délai à l'ouverture) */
+            }
+            .nav-links li { width: 100%; border-bottom: 1px solid var(--border-color); }
+            .nav-links li:last-child { border-bottom: none; }
+            .nav-links a { display: block; padding: 1rem 0; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+
+<!-- ══════════════ NAV ══════════════ -->
+<div class="nav-overlay" id="navOverlay"></div>
+<header>
+    <nav>
+        <a href="index.html" class="logo"><img src="logo.png" alt="wrecover logo" style="width:36px;height:36px;border-radius:8px;flex-shrink:0;">wrecover</a>
+        <ul class="nav-links" id="navLinksMenu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="docs.html" class="active">Docs</a></li>
+            <li><a href="eula.html">License</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </nav>
+</header>
+
+<div class="docs-wrapper">
+
+    <!-- ══════════════ SIDEBAR ══════════════ -->
+    <aside class="sidebar">
+
+        <div class="sidebar-section">
+            <span class="sidebar-label">General</span>
+            <a href="index.html" class="sidebar-link">🏠 Home</a>
+            <a href="docs.html" class="sidebar-link active">📚 Documentation Hub</a>
+            <a href="about.html" class="sidebar-link">👤 About</a>
+            <a href="eula.html" class="sidebar-link">⚖️ License (EULA)</a>
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-section">
+            <span class="sidebar-label">Seed Phrase Recovery</span>
+            <a href="algo-config-file.html" class="sidebar-link">
+                🗂 Model File
+                <span class="mode-badge">Mode 0</span>
+            </a>
+            <a href="algo-mnemonic-brute.html" class="sidebar-link">
+                🎲 Mnemonic Brute
+                <span class="mode-badge">Mode 1</span>
+            </a>
+        </div>
+
+        <div class="sidebar-section">
+            <span class="sidebar-label">Passphrase Recovery</span>
+            <a href="algo-passphrase-full.html" class="sidebar-link">
+                🔥 Passphrase Full
+                <span class="mode-badge">Mode 2</span>
+            </a>
+            <a href="algo-passphrase-mask.html" class="sidebar-link">
+                🎭 Passphrase Mask
+                <span class="mode-badge">Mode 3</span>
+            </a>
+            <a href="algo-mode4-substitution.html" class="sidebar-link">
+                🔄 Substitution
+                <span class="mode-badge gold">Mode 4</span>
+            </a>
+        </div>
+
+        <div class="sidebar-section">
+            <span class="sidebar-label">Combined Modes</span>
+            <a href="algo-mode5-model-ppfile.html" class="sidebar-link">
+                🔗 Model + PP File
+                <span class="mode-badge green">Mode 5</span>
+            </a>
+            <a href="algo-mode6-ppfile.html" class="sidebar-link">
+                📋 Brute Seed + PP File
+                <span class="mode-badge green">Mode 6</span>
+            </a>
+            <a href="algo-mode7-seedfile.html" class="sidebar-link">
+                🌱 Seed from File
+                <span class="mode-badge green">Mode 7</span>
+            </a>
+            <a href="algo-mode8-passfile.html" class="sidebar-link">
+                🔑 Passphrase File
+                <span class="mode-badge purple">Mode 8</span>
+            </a>
+            <a href="algo-mode9-seed-and-pass.html" class="sidebar-link">
+                ⚡ Seed + Pass File
+                <span class="mode-badge purple">Mode 9</span>
+            </a>
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-section">
+            <span class="sidebar-label">On This Page</span>
+            <a href="#decision" class="sidebar-link">🧭 Which mode?</a>
+            <a href="#quickref" class="sidebar-link">⚡ Quick reference</a>
+            <a href="#compat" class="sidebar-link">📊 Compatibility</a>
+        </div>
+
+    </aside>
+
+    <!-- ══════════════ MAIN ══════════════ -->
+    <main class="main-content">
+
+        <!-- Hero -->
+        <div class="docs-hero">
+            <div class="docs-hero-text">
+                <div class="hero-eyebrow">// documentation hub</div>
+                <h1>Everything you need to<br><span>recover your wallet.</span></h1>
+                <p>Complete reference for all 10 recovery algorithms — from a single missing word
+                to exhaustive seed × passphrase combination testing. Pick your scenario, follow the guide.</p>
+            </div>
+            <div class="docs-hero-stats">
+                <div class="stat-item">
+                    <span class="stat-num">10</span>
+                    <span class="stat-label">Recovery Modes</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">GPU</span>
+                    <span class="stat-label">Acceleration</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">∞</span>
+                    <span class="stat-label">Resumable</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="doc-search" placeholder="Search documentation… e.g. 'missing word', 'GPU', 'passphrase mask'" autocomplete="off">
+            <span id="search-results-count"></span>
+        </div>
+
+        <!-- ── SECTION: Getting Started ── -->
+        <div class="section-heading">
+            <h2>🚀 Getting Started</h2>
+            <div class="section-line"></div>
+            <span class="section-count">2 pages</span>
+        </div>
+
+        <div class="cards-grid" id="section-general">
+
+            <a href="about.html" class="doc-card" style="--card-accent: var(--accent-cyan);"
+               data-tags="about author story mission software overview">
+                <div class="card-top">
+                    <div class="card-icon">👤</div>
+                    <div class="card-meta">
+                        <div class="card-mode cyan">Overview</div>
+                    </div>
+                </div>
+                <h3>About wrecover</h3>
+                <p>The story behind the software, author profile, technology stack, design philosophy, and responsible-use principles.</p>
+                <div class="card-tags">
+                    <span class="card-tag">Introduction</span>
+                    <span class="card-tag">Technology</span>
+                    <span class="card-tag">Philosophy</span>
+                </div>
+                <div class="card-arrow">Read more →</div>
+            </a>
+
+            <a href="eula.html" class="doc-card" style="--card-accent: var(--accent-gold);"
+               data-tags="license EULA legal terms conditions free pro version rights">
+                <div class="card-top">
+                    <div class="card-icon">⚖️</div>
+                    <div class="card-meta">
+                        <div class="card-mode gold">Legal</div>
+                    </div>
+                </div>
+                <h3>License Agreement (EULA)</h3>
+                <p>End User License Agreement. Defines rights for Free and Pro versions — what you may and may not do with the software and its source code.</p>
+                <div class="card-tags">
+                    <span class="card-tag">License</span>
+                    <span class="card-tag">Free vs Pro</span>
+                    <span class="card-tag">Source Code</span>
+                </div>
+                <div class="card-arrow">Read more →</div>
+            </a>
+
+        </div>
+
+        <!-- ── SECTION: Seed Recovery ── -->
+        <div class="section-heading">
+            <h2>🌱 Seed Phrase Recovery</h2>
+            <div class="section-line"></div>
+            <span class="section-count">2 modes</span>
+        </div>
+
+        <div class="cards-grid" id="section-seed">
+
+            <a href="algo-config-file.html" class="doc-card" style="--card-accent: var(--accent-cyan);"
+               data-tags="Model file seed phrase mode 0 modeling constraints required fixed position groups partial knowledge">
+                <div class="card-top">
+                    <div class="card-icon">🗂</div>
+                    <div class="card-meta">
+                        <div class="card-mode cyan">Mode 0</div>
+                        <div class="card-difficulty">Difficulty: ●●○○○</div>
+                    </div>
+                </div>
+                <h3>Model File Recovery</h3>
+                <p>You know some words but not their exact positions. Use a model file with constraints (<code>@required</code>, <code>@#N fixed</code>, word groups) to systematically test valid combinations.</p>
+                <div class="card-tags">
+                    <span class="card-tag">Partial knowledge</span>
+                    <span class="card-tag">Constraints</span>
+                    <span class="card-tag">CPU / GPU</span>
+                </div>
+                <div class="card-arrow">Read guide →</div>
+            </a>
+
+            <a href="algo-mnemonic-brute.html" class="doc-card" style="--card-accent: var(--accent-cyan);"
+               data-tags="mnemonic brute force mode 1 missing words x placeholder seed phrase unknown">
+                <div class="card-top">
+                    <div class="card-icon">🎲</div>
+                    <div class="card-meta">
+                        <div class="card-mode cyan">Mode 1</div>
+                        <div class="card-difficulty">Difficulty: ●●●○○</div>
+                    </div>
+                </div>
+                <h3>Mnemonic Brute Force</h3>
+                <p>You know most of your seed phrase but are missing 1–5 words. Mark each unknown position with <code>x</code> inline (e.g. <code>abandon x able …</code>). wrecover tries all 2,048 BIP-39 words at each unknown slot. GPU acceleration is available in the Free version for up to 3 missing words; 4+ requires the Pro version.</p>
+                <div class="card-tags">
+                    <span class="card-tag">Missing words</span>
+                    <span class="card-tag">x placeholders</span>
+                    <span class="card-tag">GPU free ≤3 / Pro 4+</span>
+                </div>
+                <div class="card-arrow">Read guide →</div>
+            </a>
+
+        </div>
+
+        <!-- ── SECTION: Passphrase Recovery ── -->
+        <div class="section-heading">
+            <h2>🔒 Passphrase Recovery</h2>
+            <div class="section-line"></div>
+            <span class="section-count">3 modes</span>
+        </div>
+
+        <div class="cards-grid" id="section-passphrase">
+
+            <a href="algo-passphrase-full.html" class="doc-card" style="--card-accent: #ff4444;"
+               data-tags="passphrase full brute force mode 2 short passphrase charset lowercase uppercase special GPU">
+                <div class="card-top">
+                    <div class="card-icon">🔥</div>
+                    <div class="card-meta">
+                        <div class="card-mode" style="background:rgba(255,68,68,.1);color:#ff4444;border:1px solid rgba(255,68,68,.25)">Mode 2</div>
+                        <div class="card-difficulty">Difficulty: ●●●●○</div>
+                    </div>
+                </div>
+                <h3>Passphrase Full Brute Force</h3>
+                <p>You know the seed phrase but have completely forgotten the passphrase. Systematically tries every combination of characters up to a given length. GPU is essential.</p>
+                <div class="card-tags">
+                    <span class="card-tag">No passphrase clues</span>
+                    <span class="card-tag">Short pass (≤7 chars)</span>
+                    <span class="card-tag">GPU required</span>
+                </div>
+                <div class="card-arrow">Read guide →</div>
+            </a>
+
+            <a href="algo-passphrase-mask.html" class="doc-card" style="--card-accent: var(--accent-cyan);"
+               data-tags="passphrase mask mode 3 pattern known characters unknown wildcard ?l ?u ?d ?s ?a ?b position">
+                <div class="card-top">
+                    <div class="card-icon">🎭</div>
+                    <div class="card-meta">
+                        <div class="card-mode cyan">Mode 3</div>
+                        <div class="card-difficulty">Difficulty: ●●○○○</div>
+                    </div>
+                </div>
+                <h3>Passphrase Mask</h3>
+                <p>You remember the structure of your passphrase. Use typed wildcards for unknown positions: <code>?l</code>=lowercase, <code>?u</code>=uppercase, <code>?d</code>=digit, <code>?s</code>=special, <code>?a</code>=all. Example: <code>MyPass?d?d?d?d</code> tests all 4-digit endings.</p>
+                <div class="card-tags">
+                    <span class="card-tag">Partial knowledge</span>
+                    <span class="card-tag">?l ?u ?d ?s ?a wildcards</span>
+                    <span class="card-tag">CPU / GPU</span>
+                </div>
+                <div class="card-arrow">Read guide →</div>
+            </a>
+
+            <a href="algo-mode4-substitution.html" class="doc-card" style="--card-accent: var(--accent-gold);"
+               data-tags="passphrase substitution mode 4 leet speak character replace a at o zero s dollar dictionary">
+                <div class="card-top">
+                    <div class="card-icon">🔄</div>
+                    <div class="card-meta">
+                        <div class="card-mode gold">Mode 4</div>
+                        <div class="card-difficulty">Difficulty: ●●○○○</div>
+                    </div>
+                </div>
+                <h3>Passphrase Substitution</h3>
+                <p>You used leet-speak or character substitutions (a→@, o→0, s→$…). Provide base words in a dictionary file; wrecover generates and tests all variants automatically.</p>
+                <div class="card-tags">
+                    <span class="card-tag">Leet speak</span>
+                    <span class="card-tag">Dictionary based</span>
+                    <span class="card-tag">p@ssw0rd style</span>
+                    <span class="card-tag">CPU / GPU</span>
+                </div>
+                <div class="card-arrow">Read guide →</div>
+            </a>
+
+        </div>
+
+        <!-- ── SECTION: Combined / File-based ── -->
+        <div class="section-heading">
+            <h2>📂 File-Based &amp; Combined Modes</h2>
+            <div class="section-line"></div>
+            <span class="section-count">5 modes</span>
+        </div>
+
+        <div class="cards-grid" id="section-file">
+
+            <a href="algo-mode5-model-ppfile.html" class="doc-card" style="--card-accent: var(--accent-green);"
+               data-tags="model passphrase file mode 5 model seed constraints combined list multiple">
+                <div class="card-top">
+                    <div class="card-icon">🔗</div>
+                    <div class="card-meta">
+                        <div class="card-mode green">Mode 5</div>
+                        <div class="card-difficulty">Difficulty: ●●●○○</div>
+                    </div>
+                </div>
+                <h3>Model + Passphrase File</h3>
+                <p>Combines Mode 0 (Model file constraints on the seed) with a list of passphrase candidates from a file. Tests all seed combinations against all passphrases.</p>
+                <div class="card-tags">
+                    <span class="card-tag">Partial seed + PP list</span>
+                    <span class="card-tag">Cross-product</span>
+                    <span class="card-tag">Model file</span>
+                    <span class="card-tag">CPU / GPU</span>
+                </div>
+                <div class="card-arrow">Read guide →</div>
+            </a>
+
+            <a href="algo-mode6-ppfile.html" class="doc-card" style="--card-accent: var(--accent-green);"
+               data-tags="brute seed passphrase file mode 6 missing words x placeholder combined list gpu">
+                <div class="card-top">
+                    <div class="card-icon">📋</div>
+                    <div class="card-meta">
+                        <div class="card-mode green">Mode 6</div>
+                        <div class="card-difficulty">Difficulty: ●●●○○</div>
+                    </div>
+                </div>
+                <h3>Brute Seed + Passphrase File</h3>
+                <p>You are missing 1–4 seed words (marked with <code>x</code>) AND have a list of passphrase candidates. wrecover brute-forces every valid seed combination and tests each against all passphrases in the list simultaneously.</p>
+                <div class="card-tags">
+                    <span class="card-tag">Missing seed words</span>
+                    <span class="card-tag">PP candidates list</span>
+                    <span class="card-tag">CPU / GPU</span>
+                </div>
+                <div class="card-arrow">Read guide →</div>
+            </a>
+
+            <a href="algo-mode7-seedfile.html" class="doc-card" style="--card-accent: var(--accent-green);"
+               data-tags="seed from file mode 7 multiple complete seed phrases test backups permutations list">
+                <div class="card-top">
+                    <div class="card-icon">🌱</div>
+                    <div class="card-meta">
+                        <div class="card-mode green">Mode 7</div>
+                        <div class="card-difficulty">Difficulty: ●○○○○</div>
+                    </div>
+                </div>
+                <h3>Seed from File</h3>
+                <p>You have multiple complete seed phrase candidates (from backups, permutations, etc.) and no passphrase. Tests each seed directly against the target address.</p>
+                <div class="card-tags">
+                    <span class="card-tag">Multiple seeds</span>
+                    <span class="card-tag">No passphrase</span>
+                    <span class="card-tag">Backup testing</span>
+                    <span class="card-tag">CPU only</span>
+                </div>
+                <div class="card-arrow">Read guide →</div>
+            </a>
+
+            <a href="algo-mode8-passfile.html" class="doc-card" style="--card-accent: var(--accent-purple);"
+               data-tags="passphrase file mode 8 known seed full complete passphrase list candidates cpu">
+                <div class="card-top">
+                    <div class="card-icon">🔑</div>
+                    <div class="card-meta">
+                        <div class="card-mode purple">Mode 8</div>
+                        <div class="card-difficulty">Difficulty: ●○○○○</div>
+                    </div>
+                </div>
+                <h3>Passphrase File</h3>
+                <p>You know your seed phrase completely and have a list of passphrase candidates to test. Each passphrase in the file is tested against the known seed and target address. CPU only.</p>
+                <div class="card-tags">
+                    <span class="card-tag">Seed fully known</span>
+                    <span class="card-tag">PP candidates list</span>
+                    <span class="card-tag">CPU only</span>
+                </div>
+                <div class="card-arrow">Read guide →</div>
+            </a>
+
+            <a href="algo-mode9-seed-and-pass.html" class="doc-card" style="--card-accent: var(--accent-purple);"
+               data-tags="seed and passphrase file mode 9 combined exhaustive cross product both uncertain multiple backups">
+                <div class="card-top">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-meta">
+                        <div class="card-mode purple">Mode 9</div>
+                        <div class="card-difficulty">Difficulty: ●●●●●</div>
+                    </div>
+                </div>
+                <h3>Seed + Password File</h3>
+                <p>The most exhaustive mode: tests every seed phrase from a file against every passphrase from another file. Use when both the seed and the passphrase are uncertain.</p>
+                <div class="card-tags">
+                    <span class="card-tag">Both uncertain</span>
+                    <span class="card-tag">Cross-product</span>
+                    <span class="card-tag">CPU only</span>
+                </div>
+                <div class="card-arrow">Read guide →</div>
+            </a>
+
+        </div>
+
+        <!-- No results message -->
+        <div id="no-results">
+            <span class="nr-icon">🔍</span>
+            <p>No documentation pages match your search.<br>Try different keywords.</p>
+        </div>
+
+        <!-- ══════════════ DECISION HELPER ══════════════ -->
+        <div class="decision-section" id="decision">
+            <div class="section-heading">
+                <h2>🧭 Which mode should I use?</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <table class="decision-table">
+                <thead>
+                    <tr>
+                        <th>My situation</th>
+                        <th>Seed phrase</th>
+                        <th>Passphrase</th>
+                        <th>Recommended mode</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>I know some words but not their positions or some are unknown</td>
+                        <td>Partial — constraints known</td>
+                        <td>Known or none</td>
+                        <td><a href="algo-config-file.html">Mode 0 — Model File</a></td>
+                    </tr>
+                    <tr>
+                        <td>I know 11 of 12 words (or 21 of 24, etc.)</td>
+                        <td>1–5 words missing (<code>x</code>)</td>
+                        <td>Known or none</td>
+                        <td><a href="algo-mnemonic-brute.html">Mode 1 — Mnemonic Brute</a></td>
+                    </tr>
+                    <tr>
+                        <td>I know my seed phrase but forgot the passphrase entirely</td>
+                        <td>Complete ✓</td>
+                        <td>Fully forgotten — short</td>
+                        <td><a href="algo-passphrase-full.html">Mode 2 — Passphrase Full</a></td>
+                    </tr>
+                    <tr>
+                        <td>I remember part of my passphrase (e.g. starts with "My" and ends with digits)</td>
+                        <td>Complete ✓</td>
+                        <td>Partial pattern known</td>
+                        <td><a href="algo-passphrase-mask.html">Mode 3 — Passphrase Mask</a></td>
+                    </tr>
+                    <tr>
+                        <td>I used a dictionary word as passphrase, possibly with leet-speak</td>
+                        <td>Complete ✓</td>
+                        <td>Base word known, variants possible</td>
+                        <td><a href="algo-mode4-substitution.html">Mode 4 — Substitution</a></td>
+                    </tr>
+                    <tr>
+                        <td>I have partial seed knowledge AND a list of possible passphrases</td>
+                        <td>Partial — model file</td>
+                        <td>List of candidates</td>
+                        <td><a href="algo-mode5-model-ppfile.html">Mode 5 — Model + PP File</a></td>
+                    </tr>
+                    <tr>
+                        <td>I have missing seed words AND a list of possible passphrases</td>
+                        <td>1–4 words missing (<code>x</code>)</td>
+                        <td>List of candidates</td>
+                        <td><a href="algo-mode6-ppfile.html">Mode 6 — Brute Seed + PP File</a></td>
+                    </tr>
+                    <tr>
+                        <td>I know my seed phrase and have a list of possible passphrases to try</td>
+                        <td>Complete ✓</td>
+                        <td>List of candidates</td>
+                        <td><a href="algo-mode8-passfile.html">Mode 8 — Passphrase File</a></td>
+                    </tr>
+                    <tr>
+                        <td>I have multiple complete seed backups to test and no passphrase</td>
+                        <td>Multiple candidates (file)</td>
+                        <td>None / empty / complete</td>
+                        <td><a href="algo-mode7-seedfile.html">Mode 7 — Seed from File</a></td>
+                    </tr>
+                    <tr>
+                        <td>I have multiple possible seeds AND multiple possible passphrases</td>
+                        <td>Multiple candidates (file)</td>
+                        <td>Multiple candidates (file)</td>
+                        <td><a href="algo-mode9-seed-and-pass.html">Mode 9 — Seed + Pass File</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ══════════════ QUICK REFERENCE ══════════════ -->
+        <div class="qr-section" id="quickref">
+            <div class="section-heading">
+                <h2>⚡ Quick Command Reference</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <table class="qr-table">
+                <thead>
+                    <tr>
+                        <th>Option</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                        <th>Modes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>-m N</code></td>
+                        <td>Recovery mode (0–9)</td>
+                        <td><code>-m 1</code></td>
+                        <td>All</td>
+                    </tr>
+                    <tr>
+                        <td><code>-l N</code></td>
+                        <td>Mnemonic length (12, 18, 24)</td>
+                        <td><code>-l 12</code></td>
+                        <td>0, 5</td>
+                    </tr>
+                    <tr>
+                        <td><code>-addr "..."</code></td>
+                        <td>Target wallet address</td>
+                        <td><code>-addr "1A1zP1..."</code></td>
+                        <td>All</td>
+                    </tr>
+                    <tr>
+                        <td><code>-wlang en</code></td>
+                        <td>BIP-39 wordlist language</td>
+                        <td><code>-wlang en</code></td>
+                        <td>All</td>
+                    </tr>
+                    <tr>
+                        <td><code>-ms "..."</code></td>
+                        <td>Partial mnemonic with <code>x</code> placeholders for unknown words</td>
+                        <td><code>-ms "word1 x word3 ..."</code></td>
+                        <td>1, 6</td>
+                    </tr>
+                    <tr>
+                        <td><code>-mf "..."</code></td>
+                        <td>Complete known seed phrase (all words known)</td>
+                        <td><code>-mf "word1 word2 ..."</code></td>
+                        <td>2, 3, 4, 8</td>
+                    </tr>
+                    <tr>
+                        <td><code>-cf "file"</code></td>
+                        <td>Model file path</td>
+                        <td><code>-cf "model.txt"</code></td>
+                        <td>0, 5</td>
+                    </tr>
+                    <tr>
+                        <td><code>-sf "file"</code></td>
+                        <td>Seed phrase file, one complete phrase per line (.txt new, .bin resume)</td>
+                        <td><code>-sf "seeds.txt"</code></td>
+                        <td>7, 9</td>
+                    </tr>
+                    <tr>
+                        <td><code>-pps "file"</code></td>
+                        <td>Passphrase / dictionary file, one entry per line (.txt new, .bin resume)</td>
+                        <td><code>-pps "passphrases.txt"</code></td>
+                        <td>4, 5, 6, 8, 9</td>
+                    </tr>
+                    <tr>
+                        <td><code>-mask "..."</code></td>
+                        <td>Passphrase mask — literal chars + typed wildcards (<code>?l</code> <code>?u</code> <code>?d</code> <code>?s</code> <code>?a</code> <code>?b</code>)</td>
+                        <td><code>-mask "pass?d?d?d"</code></td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td><code>-lmin N</code></td>
+                        <td>Minimum passphrase length to brute-force</td>
+                        <td><code>-lmin 1</code></td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td><code>-lmax N</code></td>
+                        <td>Maximum passphrase length to brute-force</td>
+                        <td><code>-lmax 6</code></td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td><code>-pp "..."</code></td>
+                        <td>Fixed passphrase (25th word)</td>
+                        <td><code>-pp "mysecret"</code></td>
+                        <td>0, 1, 8</td>
+                    </tr>
+                    <tr>
+                        <td><code>-ws -wf "file" -wp "password"</code></td>
+                        <td>New search — save progress to work file (.wrec)</td>
+                        <td><code>-ws -wf "job.wrec" -wp "01234"</code></td>
+                        <td>All</td>
+                    </tr>
+                    <tr>
+                        <td><code>-save-only</code></td>
+                        <td>Create work file only, do not start recovery</td>
+                        <td><code>-save-only -wf "job.wrec"</code></td>
+                        <td>All</td>
+                    </tr>
+                    <tr>
+                        <td><code>-wi -wf "file" -wp "password"</code></td>
+                        <td>Resume from work file (.wrec)</td>
+                        <td><code>-wi -wf "job.wrec" -wp "01234"</code></td>
+                        <td>All</td>
+                    </tr>
+                    <tr>
+                        <td><code>-startp N</code></td>
+                        <td>Start at combination offset N — distributed recovery (Pro only)</td>
+                        <td><code>-startp 5000000</code></td>
+                        <td>0–6 (Pro)</td>
+                    </tr>
+                    <tr>
+                        <td><code>-endp N</code></td>
+                        <td>Stop at combination offset N — distributed recovery (Pro only)</td>
+                        <td><code>-endp 10000000</code></td>
+                        <td>0–6 (Pro)</td>
+                    </tr>
+                    <tr>
+                        <td><code>-t N</code></td>
+                        <td>CPU thread count (max 10 Free)</td>
+                        <td><code>-t 8</code></td>
+                        <td>All</td>
+                    </tr>
+                    <tr>
+                        <td><code>-gpu</code></td>
+                        <td>Enable GPU acceleration — Free: Mode 1 only, max 3 missing words; Pro: all compatible modes, unlimited</td>
+                        <td><code>-gpu</code></td>
+                        <td>0–6 (Pro); 1 (Free ≤3)</td>
+                    </tr>
+                    <tr>
+                        <td><code>-grid N</code></td>
+                        <td>GPU grid size (default: 256)</td>
+                        <td><code>-grid 256</code></td>
+                        <td>0–6 (Pro)</td>
+                    </tr>
+                    <tr>
+                        <td><code>-gblock N</code></td>
+                        <td>GPU threads per block (default: 256, max: 256)</td>
+                        <td><code>-gblock 256</code></td>
+                        <td>0–6 (Pro)</td>
+                    </tr>
+                    <tr>
+                        <td><code>-dpath "..."</code></td>
+                        <td>Custom BIP-44 derivation path</td>
+                        <td><code>-dpath "m/44'/0'/0'/0/0"</code></td>
+                        <td>All</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ══════════════ COMPATIBILITY MATRIX ══════════════ -->
+        <div class="compat-section" id="compat">
+            <div class="section-heading">
+                <h2>📊 Mode Compatibility Matrix</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <table class="compat-table">
+                <thead>
+                    <tr>
+                        <th>Mode</th>
+                        <th>Free Version</th>
+                        <th>GPU</th>
+                        <th>Work-Save</th>
+                        <th>Distributed</th>
+                        <th>Model File</th>
+                        <th>Seed File</th>
+                        <th>PP File</th>
+                        <th>Mask</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="algo-config-file.html" style="color:var(--accent-cyan);text-decoration:none">Mode 0 — Model File</a></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="algo-mnemonic-brute.html" style="color:var(--accent-cyan);text-decoration:none">Mode 1 — Mnemonic Brute</a></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-part" title="Free: max 3 missing words — Pro: unlimited">Free ≤3 / Pro ∞</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="algo-passphrase-full.html" style="color:var(--accent-cyan);text-decoration:none">Mode 2 — Passphrase Full</a></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="algo-passphrase-mask.html" style="color:var(--accent-cyan);text-decoration:none">Mode 3 — Passphrase Mask</a></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="algo-mode4-substitution.html" style="color:var(--accent-cyan);text-decoration:none">Mode 4 — Substitution</a></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="algo-mode5-model-ppfile.html" style="color:var(--accent-cyan);text-decoration:none">Mode 5 — Model + PP File</a></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="algo-mode6-ppfile.html" style="color:var(--accent-cyan);text-decoration:none">Mode 6 — Brute Seed + PP File</a></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="algo-mode7-seedfile.html" style="color:var(--accent-cyan);text-decoration:none">Mode 7 — Seed from File</a></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="algo-mode8-passfile.html" style="color:var(--accent-cyan);text-decoration:none">Mode 8 — Passphrase File</a></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="algo-mode9-seed-and-pass.html" style="color:var(--accent-cyan);text-decoration:none">Mode 9 — Seed + Pass File</a></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-no">—</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-yes">✓</span></td>
+                        <td><span class="compat-no">—</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+</div>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer class="main-footer">
+    <p>
+        © 2026 <strong style="color:var(--accent-cyan)">Romanus de DRAVO</strong> — All Rights Reserved.
+        &nbsp;·&nbsp;
+        <a href="eula.html">License</a>
+        &nbsp;·&nbsp;
+        <a href="about.html">About</a>
+        &nbsp;·&nbsp;
+        <a href="index.html">Home</a>
+    </p>
+</footer>
+
+<!-- ══════════════ LIVE SEARCH ══════════════ -->
+<script>
+    const input = document.getElementById('doc-search');
+    const counter = document.getElementById('search-results-count');
+    const noResults = document.getElementById('no-results');
+    const cards = document.querySelectorAll('.doc-card');
+    const sectionHeadings = document.querySelectorAll('.section-heading');
+
+    input.addEventListener('input', () => {
+        const q = input.value.toLowerCase().trim();
+        let visible = 0;
+
+        cards.forEach(card => {
+            const text = (card.textContent + ' ' + (card.dataset.tags || '')).toLowerCase();
+            const match = !q || text.includes(q);
+            card.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+
+        // Hide/show section headings based on whether their grid has any visible cards
+        document.querySelectorAll('.cards-grid').forEach(grid => {
+            const heading = grid.previousElementSibling;
+            const anyVisible = [...grid.querySelectorAll('.doc-card')]
+                .some(c => c.style.display !== 'none');
+            if (heading && heading.classList.contains('section-heading')) {
+                heading.style.display = anyVisible ? '' : 'none';
+            }
+            grid.style.display = anyVisible ? '' : 'none';
+        });
+
+        counter.textContent = q ? `${visible} result${visible !== 1 ? 's' : ''}` : '';
+        noResults.style.display = (q && visible === 0) ? 'block' : 'none';
+    });
+
+    // Highlight active sidebar link based on current page hash / scroll
+    const currentPage = window.location.pathname.split('/').pop() || 'docs.html';
+    document.querySelectorAll('.sidebar-link').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPage || href === '/' + currentPage) {
+            link.classList.add('active');
+        }
+    });
+</script>
+
+ <script>
+        const hbg=document.getElementById('hamburger'),
+              nav=document.getElementById('navLinksMenu'),
+              ovl=document.getElementById('navOverlay');
+        function toggle(open){
+            hbg.classList.toggle('open',open);
+            nav.classList.toggle('nav-open',open);
+            ovl.classList.toggle('active',open);
+            hbg.setAttribute('aria-expanded',open);
+            document.body.style.overflow=open?'hidden':'';
+        }
+        hbg.addEventListener('click',()=>toggle(!nav.classList.contains('nav-open')));
+        ovl.addEventListener('click',()=>toggle(false));
+        nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>toggle(false)));
+    </script>
+
+</body>
+</html>

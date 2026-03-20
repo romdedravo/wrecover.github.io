@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passphrase File - wrecover Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        html,body{overflow-x:hidden;max-width:100%}*,*::before,*::after{max-width:100%}img,video,svg,canvas{max-width:100%;height:auto}@media(max-width:860px){.container,.doc-section{box-sizing:border-box;max-width:100vw}.code-block{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;word-break:normal;white-space:pre}.code-block code{display:block;white-space:pre}table{display:block;max-width:100%;overflow-x:auto}.info-box,.warning-box,.success-box,.notice-box{box-sizing:border-box;max-width:100%;overflow-wrap:break-word;word-break:break-word}p,li,td,th{overflow-wrap:break-word;word-break:break-word}}*{margin:0;padding:0;box-sizing:border-box}:root{--primary-dark:#0a0e27;--accent-cyan:#00d9ff;--accent-green:#00ff88;--text-primary:#e8e8f0;--text-secondary:#9ca3af;--border-color:#1e2947;--card-bg:#0f1535}body{font-family:'IBM Plex Sans',sans-serif;background:var(--primary-dark);color:var(--text-primary);line-height:1.6}.container{max-width:1200px;margin:0 auto;padding:2rem}.back-link{display:inline-block;color:var(--accent-cyan);text-decoration:none;margin-bottom:2rem;font-weight:500}h1{font-family:'Orbitron',sans-serif;font-size:3rem;background:linear-gradient(135deg,var(--accent-cyan) 0%,var(--accent-green) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}.subtitle{color:var(--text-secondary);font-size:1.2rem;margin-bottom:3rem}.doc-section{background:var(--card-bg);padding:2.5rem;border-radius:16px;border-left:4px solid var(--accent-cyan);margin-bottom:2rem}h2{font-family:'Orbitron',sans-serif;color:var(--accent-cyan);font-size:1.8rem;margin-bottom:1.5rem}h3{font-family:'JetBrains Mono',monospace;color:var(--accent-green);font-size:1.3rem;margin:2rem 0 1rem}p{color:var(--text-secondary);margin-bottom:1rem;line-height:1.8}.code-block{background:var(--primary-dark);border:1px solid var(--border-color);border-radius:8px;padding:1.5rem;font-family:'JetBrains Mono',monospace;font-size:.9rem;overflow-x:auto;margin:1rem 0}.code-block code{color:var(--accent-green)}.comment{color:#6b7280}.info-box{background:rgba(0,217,255,.1);border-left:4px solid var(--accent-cyan);padding:1.5rem;border-radius:8px;margin:1.5rem 0}.info-box strong{color:var(--accent-cyan);display:block;margin-bottom:.5rem}.warning-box{background:rgba(255,170,0,.1);border-left:4px solid #ffaa00;padding:1.5rem;border-radius:8px;margin:1.5rem 0}.warning-box strong{color:#ffaa00;display:block;margin-bottom:.5rem}.success-box{background:rgba(0,255,136,.1);border-left:4px solid var(--accent-green);padding:1.5rem;border-radius:8px;margin:1.5rem 0}.success-box strong{color:var(--accent-green);display:block;margin-bottom:.5rem}table{width:100%;border-collapse:collapse;margin:2rem 0}th,td{padding:1rem;text-align:left;border-bottom:1px solid var(--border-color)}th{background:var(--primary-dark);color:var(--accent-cyan)}td{color:var(--text-secondary)}ul,ol{margin-left:2rem;color:var(--text-secondary);line-height:2}@media(max-width:680px){h1{font-size:2rem}h2{font-size:1.3rem}h3{font-size:1.1rem}.subtitle{font-size:1rem;margin-bottom:2rem}.container{padding:1rem}.doc-section{padding:1.5rem 1rem;border-radius:10px}.code-block{padding:1rem;font-size:.8rem}.info-box,.warning-box,.success-box{padding:1rem}table{font-size:.85rem}th,td{padding:.6rem .7rem}ul,ol{margin-left:1.2rem}.back-link{font-size:.9rem}}
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="docs.html" class="back-link">&larr; Back to Documentation</a>
+    <h1>Passphrase File</h1>
+    <p class="subtitle">Mode 8: Test a list of passphrase candidates against a known, complete seed phrase</p>
+
+    <div class="doc-section">
+        <h2>&#128203; Overview</h2>
+        <p>Mode 8 is the simplest passphrase recovery mode: you provide the complete, correct seed phrase and a file of passphrase candidates. wrecover tests each passphrase candidate from the file against the seed phrase and target address.</p>
+        <p>Use this mode when you know your seed phrase exactly but have forgotten the BIP39 passphrase, and have a list of likely passphrases you want to test.</p>
+        <div class="warning-box">
+            <strong>&#9888;&#65039; CPU only &mdash; no GPU support</strong>
+            <p>This mode runs on CPU only (both Free and Pro versions). If <code>-gpu</code> is passed, wrecover falls back to CPU and logs an info message.</p>
+        </div>
+    </div>
+
+    <div class="doc-section">
+        <h2>&#128196; Passphrase File Format</h2>
+        <p>Plain text file, one passphrase candidate per line (.txt extension for new search). A <code>.bin</code> binary index is generated automatically. On resume (<code>-wi</code>), supply the <code>.bin</code> path.</p>
+        <div class="code-block"><code><span class="comment"># passphrases.txt</span><br>
+MyPassphrase<br>
+password123<br>
+Bitcoin2009!<br>
+Satoshi<br>
+hodl<br>
+
+summer2024</code></div>
+        <div class="info-box">
+            <strong>&#128161; Empty passphrase</strong>
+            <p>To test no passphrase (empty string), add a blank line to the file. The blank line is preserved and treated as an empty passphrase candidate.</p>
+        </div>
+    </div>
+
+    <div class="doc-section">
+        <h2>&#128640; Commands</h2>
+
+        <h3>New search</h3>
+        <div class="code-block"><code>wrecover -m 8 -mf "word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12" -pps passphrases.txt -addr "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa" -wlang en -ws -wf recovery.wrec -wp "this workfile password"</code></div>
+
+        <h3>Resume (provide .bin passphrase file)</h3>
+        <div class="code-block"><code>wrecover -wi -wf recovery.wrec -wp "this workfile password" -pps passphrases.bin</code></div>
+    </div>
+
+    <div class="doc-section">
+        <h2>&#128214; Parameter Reference</h2>
+        <table>
+            <thead><tr><th>Option</th><th>Description</th><th>Required</th></tr></thead>
+            <tbody>
+                <tr><td><code>-m 8</code></td><td>Select Mode 8</td><td>Yes</td></tr>
+                <tr><td><code>-mf "&lt;full mnemonic&gt;"</code></td><td>Complete, correct seed phrase (all words known)</td><td>Yes</td></tr>
+                <tr><td><code>-pps &lt;file.txt|.bin&gt;</code></td><td>Passphrase candidate file (.txt new, .bin resume)</td><td>Yes</td></tr>
+                <tr><td><code>-addr &lt;address&gt;</code></td><td>Target blockchain address</td><td>Yes</td></tr>
+                <tr><td><code>-wlang &lt;code&gt;</code></td><td>BIP39 wordlist language</td><td>Yes</td></tr>
+                <tr><td><code>-ws</code></td><td>New search</td><td>Yes*</td></tr>
+                <tr><td><code>-wi</code></td><td>Resume from work file</td><td>Yes*</td></tr>
+                <tr><td><code>-wf &lt;file.wrec&gt;</code></td><td>Work file path</td><td>Yes</td></tr>
+                <tr><td><code>-dpath &lt;path&gt;</code></td><td>Override derivation path</td><td>No</td></tr>
+                <tr><td><code>-t &lt;N&gt;</code></td><td>CPU threads (Free: max 10; Pro: unlimited)</td><td>No</td></tr>
+                <tr><td><code>-wp &lt;password&gt;</code></td><td>Encrypt work file</td><td>No</td></tr>
+                <tr><td><code>-save-only</code></td><td>Create work file only</td><td>No</td></tr>
+            </tbody>
+        </table>
+        <p style="font-size:0.9rem;margin-top:0.5rem;">* Use either <code>-ws</code> (new search) or <code>-wi</code> (resume) &mdash; not both.</p>
+        <div class="warning-box">
+            <strong>&#9888;&#65039; No GPU support</strong>
+            <p><code>-gpu</code>, <code>-startp</code>, and <code>-endp</code> are not supported in Mode 8.</p>
+        </div>
+    </div>
+
+    <div class="doc-section">
+        <h2>&#127758; Languages &amp; Address Types</h2>
+        <h3>Languages (<code>-wlang</code>)</h3>
+        <table>
+            <thead><tr><th>Code</th><th>Language</th></tr></thead>
+            <tbody>
+                <tr><td><code>en</code></td><td>English</td></tr>
+                <tr><td><code>es</code></td><td>Spanish</td></tr>
+                <tr><td><code>fr</code></td><td>French</td></tr>
+                <tr><td><code>it</code></td><td>Italian</td></tr>
+            </tbody>
+        </table>
+        <h3>Address types (auto-detected)</h3>
+        <table>
+            <thead><tr><th>Address format</th><th>Type</th><th>Default derivation path</th></tr></thead>
+            <tbody>
+                <tr><td>Starts with <code>1</code></td><td>Bitcoin Legacy (P2PKH)</td><td><code>m/44'/0'/0'/0</code></td></tr>
+                <tr><td>Starts with <code>3</code></td><td>Bitcoin SegWit P2SH</td><td><code>m/49'/0'/0'/0</code></td></tr>
+                <tr><td>Starts with <code>bc1q</code></td><td>Bitcoin Native SegWit</td><td><code>m/84'/0'/0'/0</code></td></tr>
+                <tr><td>Starts with <code>0x</code></td><td>Ethereum</td><td><code>m/44'/60'/0'/0</code></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="doc-section">
+        <h2>&#9889; Performance</h2>
+        <table>
+            <thead><tr><th>Passphrases</th><th>CPU 1 thread</th><th>CPU 8 threads</th></tr></thead>
+            <tbody>
+                <tr><td>10</td><td>&lt;0.1 sec</td><td>Instant</td></tr>
+                <tr><td>1,000</td><td>~1 sec</td><td>&lt;0.2 sec</td></tr>
+                <tr><td>100,000</td><td>~1.5 min</td><td>~12 sec</td></tr>
+                <tr><td>1,000,000</td><td>~14 min</td><td>~2 min</td></tr>
+            </tbody>
+        </table>
+        <div class="info-box">
+            <strong>&#128161; Large lists</strong>
+            <p>For very large passphrase lists (millions of entries), consider Mode 2 (brute-force) or Mode 3 (mask) if the search space can be described by a pattern, as they are far more efficient than file-based approaches at scale.</p>
+        </div>
+    </div>
+
+    <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border-color);text-align:center;">
+        <a href="docs.html" class="back-link">&larr; Back to Documentation</a>
+    </div>
+</div>
+</body>
+</html>

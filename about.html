@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About — wrecover</title>
+    <meta name="description" content="Learn about wrecover, the professional cryptocurrency wallet recovery tool developed by Romanus de DRAVO. Built for security researchers, forensics professionals, and individuals who have lost access to their crypto wallets.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+
+        /* ── Anti-overflow global (mobile) ──────────────────── */
+        html, body { overflow-x: hidden; max-width: 100%; }
+        *, *::before, *::after { max-width: 100%; box-sizing: border-box; }
+        img, video, svg, canvas { max-width: 100%; height: auto; }
+        @media (max-width: 860px) {
+            .container, .doc-section, .main-content, .page-wrapper, .section-content {
+                box-sizing: border-box; max-width: 100vw;
+            }
+            .code-block {
+                max-width: 100%; overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                word-break: normal; white-space: pre;
+            }
+            table {
+                display: block; max-width: 100%;
+                overflow-x: auto; -webkit-overflow-scrolling: touch;
+            }
+            p, li, td, th, h1, h2, h3 {
+                overflow-wrap: break-word; word-break: break-word;
+            }
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary-dark:   #0a0e27;
+            --secondary-dark: #141b3d;
+            --accent-cyan:    #00d9ff;
+            --accent-gold:    #ffd700;
+            --accent-green:   #00ff88;
+            --text-primary:   #e8e8f0;
+            --text-secondary: #9ca3af;
+            --border-color:   #1e2947;
+            --card-bg:        #0f1535;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: var(--primary-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ── Background grid ───────────────────────────────────── */
+        .bg-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image:
+                linear-gradient(rgba(0,217,255,.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,217,255,.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+        @keyframes gridMove {
+            0%   { transform: translate(0,0); }
+            100% { transform: translate(50px,50px); }
+        }
+        .glow { position: fixed; width: 600px; height: 600px; border-radius: 50%;
+                background: radial-gradient(circle, rgba(0,217,255,.08) 0%, transparent 70%);
+                pointer-events: none; z-index: -1; animation: floatGlow 18s ease-in-out infinite; }
+        .glow-1 { top: -200px; left: -200px; }
+        .glow-2 { bottom: -200px; right: -200px; animation-delay: 9s; }
+        @keyframes floatGlow {
+            0%,100% { transform: translate(0,0) scale(1); }
+            50%     { transform: translate(80px,80px) scale(1.1); }
+        }
+
+        /* ── Navigation ────────────────────────────────────────── */
+        header {
+            position: sticky; top: 0;
+            background: rgba(10,14,39,.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000; padding: 1rem 0;
+        }
+        nav {
+            max-width: 1400px; margin: 0 auto;
+            padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo {
+            font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-cyan), #0066ff);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: 2px; text-decoration: none;
+            display: flex; align-items: center; gap: .5rem;
+        }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a {
+            color: var(--text-secondary); text-decoration: none;
+            font-weight: 500; transition: color .3s;
+        }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); }
+
+        /* ── Hero ──────────────────────────────────────────────── */
+        .hero {
+            padding: 7rem 2rem 5rem;
+            max-width: 1000px; margin: 0 auto;
+            text-align: center;
+        }
+        .hero-label {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace; font-size: .85rem;
+            color: var(--accent-cyan); letter-spacing: 3px; text-transform: uppercase;
+            background: rgba(0,217,255,.08); border: 1px solid rgba(0,217,255,.25);
+            padding: .4rem 1.2rem; border-radius: 20px; margin-bottom: 2rem;
+        }
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif; font-size: 3.8rem; font-weight: 900;
+            line-height: 1.1; margin-bottom: 1.5rem;
+        }
+        .hero h1 .line-cyan  { background: linear-gradient(135deg, var(--accent-cyan), #0099cc);
+                               -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero h1 .line-white { color: var(--text-primary); }
+        .hero .lead {
+            font-size: 1.2rem; color: var(--text-secondary);
+            max-width: 680px; margin: 0 auto 3rem;
+        }
+        .hero-divider {
+            width: 80px; height: 3px; margin: 0 auto;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+        }
+
+        /* ── Sections shared ───────────────────────────────────── */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+        section { padding: 5rem 0; }
+        section:nth-child(even) { background: rgba(255,255,255,.015); }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace; font-size: .8rem;
+            color: var(--accent-cyan); letter-spacing: 3px; text-transform: uppercase;
+            margin-bottom: .8rem;
+        }
+        .section-title {
+            font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 700;
+            margin-bottom: 1.2rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .section-intro { color: var(--text-secondary); font-size: 1.05rem; max-width: 700px; }
+
+        /* ── Mission cards ─────────────────────────────────────── */
+        .mission-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        .mission-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 16px; padding: 2rem;
+            transition: border-color .3s, transform .3s;
+        }
+        .mission-card:hover { border-color: var(--accent-cyan); transform: translateY(-4px); }
+        .mission-icon {
+            font-size: 2.2rem; margin-bottom: 1rem;
+            display: block;
+        }
+        .mission-card h3 {
+            font-family: 'Orbitron', sans-serif; font-size: 1rem;
+            color: var(--accent-cyan); margin-bottom: .8rem;
+        }
+        .mission-card p { color: var(--text-secondary); font-size: .95rem; }
+
+        /* ── Story section (author) ─────────────────────────────── */
+        .story-layout {
+            display: grid; grid-template-columns: 1fr 2fr; gap: 4rem;
+            align-items: start; margin-top: 3rem;
+        }
+        .author-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 20px; padding: 2.5rem; text-align: center; position: sticky; top: 120px;
+        }
+        .author-avatar {
+            width: 110px; height: 110px; border-radius: 50%; margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, rgba(0,217,255,.15), rgba(0,102,255,.15));
+            border: 2px solid rgba(0,217,255,.4);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem;
+        }
+        .author-name {
+            font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 700;
+            color: var(--text-primary); margin-bottom: .3rem;
+        }
+        .author-title { color: var(--accent-cyan); font-size: .9rem; margin-bottom: 1.5rem; }
+        .author-badges { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; }
+        .badge {
+            font-family: 'JetBrains Mono', monospace; font-size: .72rem;
+            padding: .25rem .7rem; border-radius: 20px; letter-spacing: 1px;
+        }
+        .badge-cyan  { background: rgba(0,217,255,.1); border: 1px solid rgba(0,217,255,.35); color: var(--accent-cyan); }
+        .badge-gold  { background: rgba(255,215,0,.1);  border: 1px solid rgba(255,215,0,.35);  color: var(--accent-gold); }
+        .badge-green { background: rgba(0,255,136,.1); border: 1px solid rgba(0,255,136,.35); color: var(--accent-green); }
+
+        /* Story text blocks */
+        .story-text h3 {
+            font-family: 'Orbitron', sans-serif; font-size: 1.3rem;
+            color: var(--accent-cyan); margin: 2rem 0 .8rem;
+        }
+        .story-text h3:first-child { margin-top: 0; }
+        .story-text p { color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.8; }
+        .story-text p strong { color: var(--text-primary); }
+
+        .quote-block {
+            border-left: 3px solid var(--accent-cyan);
+            background: rgba(0,217,255,.05);
+            padding: 1.2rem 1.5rem; border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+        .quote-block p {
+            color: var(--text-primary) !important; font-style: italic;
+            font-size: 1.05rem; margin: 0 !important;
+        }
+
+        /* ── Technology stack ──────────────────────────────────── */
+        .tech-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        .tech-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 14px; padding: 1.8rem;
+            display: flex; gap: 1.2rem; align-items: flex-start;
+            transition: border-color .3s;
+        }
+        .tech-card:hover { border-color: var(--accent-green); }
+        .tech-icon {
+            font-size: 2rem; flex-shrink: 0;
+            width: 52px; height: 52px;
+            background: rgba(0,255,136,.08); border: 1px solid rgba(0,255,136,.2);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+        }
+        .tech-card h4 {
+            font-family: 'JetBrains Mono', monospace; font-size: .95rem;
+            color: var(--accent-green); margin-bottom: .4rem;
+        }
+        .tech-card p { color: var(--text-secondary); font-size: .9rem; }
+
+        /* ── Philosophy pillars ─────────────────────────────────── */
+        .pillars {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        .pillar {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 14px; padding: 2rem;
+            border-left: 4px solid transparent;
+            transition: border-color .3s;
+        }
+        .pillar:nth-child(1) { border-left-color: var(--accent-cyan); }
+        .pillar:nth-child(2) { border-left-color: var(--accent-gold); }
+        .pillar:nth-child(3) { border-left-color: var(--accent-green); }
+        .pillar:nth-child(4) { border-left-color: #a855f7; }
+        .pillar h4 {
+            font-family: 'Orbitron', sans-serif; font-size: 1rem;
+            color: var(--text-primary); margin-bottom: .7rem;
+        }
+        .pillar p { color: var(--text-secondary); font-size: .92rem; line-height: 1.7; }
+
+        /* ── Timeline ───────────────────────────────────────────── */
+        .timeline { margin-top: 3rem; position: relative; }
+        .timeline::before {
+            content: ''; position: absolute; left: 22px; top: 0; bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent-cyan), transparent);
+        }
+        .timeline-item { display: flex; gap: 2rem; margin-bottom: 2.5rem; }
+        .timeline-dot {
+            width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+            background: var(--card-bg); border: 2px solid var(--accent-cyan);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; position: relative; z-index: 1;
+        }
+        .timeline-content { padding-top: .3rem; }
+        .timeline-date {
+            font-family: 'JetBrains Mono', monospace; font-size: .8rem;
+            color: var(--accent-cyan); letter-spacing: 2px; margin-bottom: .3rem;
+        }
+        .timeline-content h4 { color: var(--text-primary); font-size: 1rem; margin-bottom: .4rem; }
+        .timeline-content p  { color: var(--text-secondary); font-size: .92rem; }
+
+        /* ── Ethics / responsibility ────────────────────────────── */
+        .ethics-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        .ethics-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 14px; padding: 1.8rem; text-align: center;
+        }
+        .ethics-icon { font-size: 2.5rem; display: block; margin-bottom: 1rem; }
+        .ethics-card h4 { color: var(--text-primary); margin-bottom: .6rem; font-size: 1rem; }
+        .ethics-card p  { color: var(--text-secondary); font-size: .88rem; line-height: 1.7; }
+
+        /* ── Contact CTA ────────────────────────────────────────── */
+        .contact-section {
+            background: linear-gradient(135deg, rgba(0,217,255,.06), rgba(0,102,255,.06));
+            border: 1px solid rgba(0,217,255,.15);
+            border-radius: 24px; padding: 4rem; text-align: center;
+            margin: 0 2rem 5rem;
+        }
+        .contact-section h2 {
+            font-family: 'Orbitron', sans-serif; font-size: 2rem;
+            margin-bottom: 1rem; color: var(--text-primary);
+        }
+        .contact-section p { color: var(--text-secondary); max-width: 540px; margin: 0 auto 2.5rem; }
+        .cta-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-cyan), #0066ff);
+            color: var(--primary-dark); font-weight: 700; padding: .9rem 2.2rem;
+            border-radius: 8px; text-decoration: none; font-size: 1rem; transition: all .3s;
+            box-shadow: 0 4px 20px rgba(0,217,255,.3);
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,217,255,.5); }
+        .btn-outline {
+            background: transparent; border: 1px solid rgba(0,217,255,.5);
+            color: var(--accent-cyan); font-weight: 600; padding: .9rem 2.2rem;
+            border-radius: 8px; text-decoration: none; font-size: 1rem; transition: all .3s;
+        }
+        .btn-outline:hover { background: rgba(0,217,255,.08); transform: translateY(-3px); }
+
+        /* ── Footer ─────────────────────────────────────────────── */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 2rem; text-align: center;
+        }
+        footer p { color: var(--text-secondary); font-size: .9rem; }
+        footer a { color: var(--accent-cyan); text-decoration: none; }
+
+        /* ── Responsive ─────────────────────────────────────────── */
+        @media (max-width: 900px) {
+            .story-layout   { grid-template-columns: 1fr; }
+            .author-card    { position: static; }
+            .mission-grid   { grid-template-columns: 1fr; }
+            .tech-grid      { grid-template-columns: 1fr; }
+            .pillars        { grid-template-columns: 1fr; }
+            .ethics-grid    { grid-template-columns: 1fr; }
+            .hero h1        { font-size: 2.5rem; }
+        }
+    
+        /* ── Hamburger button ───────────────────────────── */
+        .hamburger {
+            display: none; flex-direction: column; justify-content: space-between;
+            width: 28px; height: 20px; cursor: pointer; background: none;
+            border: none; padding: 0; z-index: 1100;
+        }
+        .hamburger span { display: block; width: 100%; height: 2px;
+            background: var(--accent-cyan); border-radius: 2px;
+            transition: all 0.35s ease; transform-origin: center; }
+        .hamburger.open span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .hamburger.open span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+        .nav-overlay { display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,.55); z-index: 800; }
+        .nav-overlay.active { display: block; }
+        @media (max-width: 860px) {
+            .hamburger { display: flex; }
+            .nav-links {
+                position: fixed; top: 0; right: 0; height: 100vh;
+                width: min(280px, 80vw);
+                background: rgba(10,14,39,.98); backdrop-filter: blur(16px);
+                flex-direction: column; align-items: flex-start;
+                gap: 0; padding: 5rem 2rem 2rem;
+                border-left: 1px solid var(--border-color);
+                transform: translateX(110%);
+                visibility: hidden;                    /* ← AJOUTER */
+                transition: transform 0.4s cubic-bezier(0.4,0,0.2,1),
+                            visibility 0s linear 0.4s; /* ← AJOUTER (délai = durée anim) */
+                z-index: 1050;
+            }
+            .nav-links.nav-open {
+                transform: translateX(0);
+                visibility: visible;                   /* ← AJOUTER */
+                transition: transform 0.4s cubic-bezier(0.4,0,0.2,1),
+                            visibility 0s linear 0s;   /* ← AJOUTER (pas de délai à l'ouverture) */
+            }
+            .nav-links li { width: 100%; border-bottom: 1px solid var(--border-color); }
+            .nav-links li:last-child { border-bottom: none; }
+            .nav-links a { display: block; padding: 1rem 0; font-size: 1rem; }
+        }
+        
+        @media (max-width: 860px) {
+            /* All multi-column grids → single column */
+            .tech-grid,
+            .values-grid,
+            .philosophy-grid {
+                grid-template-columns: 1fr !important;
+            }
+            /* Author layout: 1fr 2fr → single column */
+            .story-layout {
+                grid-template-columns: 1fr !important;
+                gap: 2rem !important;
+            }
+            /* Author card: remove sticky on mobile */
+            .author-card {
+                position: static !important;
+            }
+            /* Glow blobs */
+            .glow {
+                width: 250px !important;
+                height: 250px !important;
+            }
+            /* Sections padding */
+            section {
+                padding: 3rem 1.2rem !important;
+            }
+            .container {
+                padding-left: 1.2rem !important;
+                padding-right: 1.2rem !important;
+            }
+            /* Hero padding */
+            .hero-section {
+                padding: 5rem 1.2rem 3rem !important;
+            }
+            /* Timeline: reduce gap */
+            .timeline-item {
+                gap: 1rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+
+<!-- ══════════════════════ NAV ══════════════════════ -->
+<div class="nav-overlay" id="navOverlay"></div>
+<header>
+    <nav>
+        <a href="index.html" class="logo"><img src="logo.png" alt="wrecover logo" style="width:36px;height:36px;border-radius:8px;flex-shrink:0;">wrecover</a>
+        <ul class="nav-links" id="navLinksMenu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="docs.html">Documentation</a></li>
+            <li><a href="eula.html">License</a></li>
+            <li><a href="about.html" class="active">About</a></li>
+        </ul>
+    
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </nav>
+</header>
+
+<!-- ══════════════════════ HERO ══════════════════════ -->
+<div class="hero">
+    <span class="hero-label">// about wrecover</span>
+    <h1>
+        <span class="line-white">Built by a developer,</span><br>
+        <span class="line-cyan">for people who've lost access.</span>
+    </h1>
+    <p class="lead">
+        wrecover was born from a single conviction: no one should permanently lose access to
+        their digital assets because of a forgotten word, a misplaced note, or a corrupted backup.
+    </p>
+    <div class="hero-divider"></div>
+</div>
+
+<!-- ══════════════════════ MISSION ══════════════════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">// mission</div>
+        <h2 class="section-title">Why wrecover exists</h2>
+        <p class="section-intro">
+            Every year, billions of dollars in cryptocurrency become permanently inaccessible — not because of theft
+            or fraud, but because of simple human memory. wrecover exists to solve that problem with precision,
+            speed, and integrity.
+        </p>
+
+        <div class="mission-grid">
+            <div class="mission-card">
+                <span class="mission-icon">🔑</span>
+                <h3>Access Recovery</h3>
+                <p>Help legitimate owners regain access to their own wallets through intelligent,
+                high-performance brute-force recovery using every available clue.</p>
+            </div>
+            <div class="mission-card">
+                <span class="mission-icon">⚡</span>
+                <h3>Maximum Performance</h3>
+                <p>Leverage the full potential of modern hardware — multi-core CPUs, NVIDIA &amp; AMD
+                GPUs — to reduce recovery time from years to hours or minutes.</p>
+            </div>
+            <div class="mission-card">
+                <span class="mission-icon">🛡</span>
+                <h3>Privacy by Design</h3>
+                <p>Every operation runs entirely on your local machine. No seed phrase,
+                no private key, no recovery result ever leaves your hardware.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════ STORY / AUTHOR ══════════════════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">// the author</div>
+        <h2 class="section-title">The story behind the code</h2>
+
+        <div class="story-layout">
+
+            <!-- Author card -->
+            <div>
+                <div class="author-card">
+                    <div class="author-avatar">👨‍💻</div>
+                    <div class="author-name">Romanus de DRAVO</div>
+                    <div class="author-title">Author &amp; Lead Developer</div>
+                    <div class="author-badges">
+                        <span class="badge badge-cyan">C++ / CUDA</span>
+                        <span class="badge badge-cyan">OpenCL</span>
+                        <span class="badge badge-gold">Cryptography</span>
+                        <span class="badge badge-gold">BIP-32/39/44</span>
+                        <span class="badge badge-green">GPU Computing</span>
+                        <span class="badge badge-green">Blockchain</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Story text -->
+            <div class="story-text">
+
+                <h3>The problem I couldn't ignore</h3>
+                <p>
+                    The catalyst was straightforward: someone close to me had lost access to a Bitcoin wallet
+                    from 2018. The seed phrase was partially written down — eight of twelve words were legible,
+                    but four had faded beyond recognition. The funds were significant.
+                </p>
+                <p>
+                    I started looking for tools that could help. What I found was either abandoned open-source
+                    projects that no longer compiled, slow scripts written in python, or closed-source
+                    commercial services that required you to hand over your seed phrase to a stranger.
+                    <strong>None of these were acceptable.</strong>
+                </p>
+
+                <div class="quote-block">
+                    <p>"If you know eight of your twelve seed words, you shouldn't need to trust a stranger
+                    with the other four. You just need a fast, reliable tool that runs on your own machine."</p>
+                </div>
+
+                <h3>Building the right tool</h3>
+                <p>
+                    I spent months studying the BIP-32, BIP-39, and BIP-44 specifications in depth —
+                    understanding the precise derivation path that transforms a mnemonic into a hierarchical
+                    deterministic wallet. I wrote the cryptographic primitives from scratch: SHA-512 for
+                    PBKDF2, HMAC-SHA512 for child key derivation, the full secp256k1 elliptic curve
+                    arithmetic for address generation.
+                </p>
+                <p>
+                    The first version was CPU-only and could brute-force a single missing word in under a second.
+                    But two missing words took minute. Three was impractical. That's when I began the GPU work.
+                </p>
+                <p>
+                    Porting the entire BIP-39 derivation pipeline to CUDA and OpenCL was the hardest
+                    engineering challenge of the project — keeping the cryptographic logic bit-perfect
+                    while parallelising it across thousands of GPU cores. The speedup was transformative:
+                    <strong>650&times; to 6,000&times; faster than a single CPU thread</strong> (measured: ~2.6M seeds/sec on Tesla T4 vs 3,000&ndash;4,000 seeds/sec per CPU thread for 12-word mnemonics; ~21M seeds/sec on Tesla T4 vs 30,000&ndash;32,000 seeds/sec per CPU thread for 24-word mnemonics).
+                </p>
+
+                <h3>Growing into a full recovery platform</h3>
+                <p>
+                    What started as a single-mode missing-word finder evolved into a complete recovery
+                    platform. Users needed to test passphrase variations, not just missing words.
+                    They needed to handle leet-speak substitutions, masked patterns, lists of candidates
+                    from exported password managers. Each new use case became a new recovery mode.
+                </p>
+                <p>
+                    Today, wrecover covers <strong>10 distinct recovery algorithms</strong> spanning
+                    every realistic scenario: from configuration-file-based seed constraints to full
+                    cross-product testing of seed lists with passphrase lists.
+                    The work-file system — pause, resume, distribute across multiple machines — came
+                    from seeing users give up on long jobs because their computer needed to restart. 
+                    The work-file is compatible with all other CPU or GPU systems.
+                </p>
+
+                <h3>The commitment that remains</h3>
+                <p>
+                    wrecover is, and will remain, a tool built for legitimate owners recovering
+                    legitimate access. The architecture is deliberately local-first: there is no telemetry,
+                    no cloud API call, no license server that sees your data. Your seed phrase never
+                    leaves your machine.
+                </p>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════ TECHNOLOGY ══════════════════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">// technology</div>
+        <h2 class="section-title">What's under the hood</h2>
+        <p class="section-intro">
+            Every component of wrecover was written with cryptographic correctness and raw performance
+            as co-equal goals. There are no shortcuts in the math.
+        </p>
+
+        <div class="tech-grid">
+            <div class="tech-card">
+                <div class="tech-icon">🔐</div>
+                <div>
+                    <h4>BIP-39 / BIP-32 / BIP-44</h4>
+                    <p>Full, specification-compliant implementation of the BIP-39 mnemonic-to-seed derivation
+                    (PBKDF2-HMAC-SHA512, 2048 iterations) and BIP-32 hierarchical deterministic key
+                    derivation with secp256k1 elliptic curve arithmetic. Supports all standard derivation
+                    paths and 4 BIP-39 wordlist languages (English, Spanish, French, Italian).</p>
+                </div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">⚙️</div>
+                <div>
+                    <h4>C++20 Core Engine</h4>
+                    <p>The recovery engine is written in modern C++20. The architecture is template-heavy but
+                    compile-time resolved, with zero virtual dispatch in the hot path. Supports up to 10 threads
+                    (Free) or unlimited (Pro).</p>
+                </div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🖥</div>
+                <div>
+                    <h4>CUDA GPU Backend</h4>
+                    <p>A fully parallelised CUDA kernel runs the complete BIP-39 derivation pipeline on NVIDIA GPUs. The kernel is tuned for maximum occupancy with configurable grid and thread dimensions. Achieves 50–1000× speedup over CPU depending on hardware and recovery mode. Measured throughput: ~2.6M seeds/sec (12-word) to ~21M seeds/sec (24-word) on a Tesla T4; ~26.4M (12-word) to ~264M seeds/sec (24-word) on a RTX PRO 6000. The Free version exposes GPU acceleration for Mode 1 (up to 3 missing words) so users can benchmark their hardware. The Pro version unlocks full multi-GPU acceleration across all compatible modes with linear multi-GPU scaling.</p>
+                </div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🌐</div>
+                <div>
+                    <h4>OpenCL GPU Backend</h4>
+                    <p>A portable OpenCL implementation enables GPU acceleration on AMD graphics cards
+                    and other OpenCL-compatible devices. The same algorithmic pipeline as the CUDA
+                    backend, cross-compiled via the OpenCL runtime with device-specific optimisations
+                    for memory bandwidth and compute throughput.</p>
+                </div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">💾</div>
+                <div>
+                    <h4>Work-File Persistence System</h4>
+                    <p>Binary work files capture the full recovery state — search space parameters,
+                    progress counters, and configuration — in an encrypted, tamper-evident format.
+                    Any interrupted job can be resumed exactly where it stopped, on the same machine
+                    or a different one, enabling distributed recovery across multiple computers.</p>
+                </div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🔬</div>
+                <div>
+                    <h4>10 Recovery Algorithms</h4>
+                    <p>From combinatorial seed-model constraints (Mode 0) to cross-product seed × passphrase
+                    file testing (Mode 9), each algorithm is purpose-built for a distinct recovery
+                    scenario. The substitution engine (Mode 4) uses a precomputed variant database for
+                    leet-speak and character-substitution recovery without redundant recomputation.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════ PHILOSOPHY ══════════════════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">// design philosophy</div>
+        <h2 class="section-title">Four principles, no compromise</h2>
+        <p class="section-intro">
+            Every architectural and product decision in wrecover is grounded in four non-negotiable principles.
+        </p>
+
+        <div class="pillars">
+            <div class="pillar">
+                <h4>🔒&nbsp; Privacy-First, Always</h4>
+                <p>The Software operates in complete isolation from the network. No telemetry, no
+                analytics, no license validation that transmits data. Your seed phrase, your passphrase,
+                and your recovery results exist only on your hardware.</p>
+            </div>
+            <div class="pillar">
+                <h4>⚖️&nbsp; Correctness Before Speed</h4>
+                <p>Cryptographic accuracy is non-negotiable. The BIP-39 and secp256k1 implementations
+                are validated against the official test vectors from the Bitcoin Improvement Proposals.
+                A faster-but-wrong derivation is worse than useless — it makes genuine recovery
+                impossible.</p>
+            </div>
+            <div class="pillar">
+                <h4>🎯&nbsp; Precision Over Brute Force</h4>
+                <p>The design philosophy favours intelligent search over blind enumeration. The
+                configuration-file system, mask patterns, substitution rules, and work-splitting
+                architecture all exist to let users apply domain knowledge to reduce the search space
+                by orders of magnitude before a single hash is computed.</p>
+            </div>
+            <div class="pillar">
+                <h4>🤝&nbsp; Transparent Licensing</h4>
+                <p>The Free Version is genuinely free, with clearly documented limitations. The Pro
+                Version is fully priced and provides full source code access for internal audit and
+                customisation. There are no hidden modes, no crippled algorithms, and no obfuscated
+                binaries. What you read in the documentation is exactly what the software does.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════ ROADMAP / HISTORY ══════════════════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">// history &amp; roadmap</div>
+        <h2 class="section-title">From a single use case to a complete platform</h2>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot">🌱</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">ORIGIN</div>
+                    <h4>The first missing-word problem</h4>
+                    <p>A partially legible paper backup with four unreadable word. eight words known,
+                    four missing. The CPU-only prototype could not solve it, so it became the
+                    foundation of wrecover.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot">⚡</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">MILESTONE</div>
+                    <h4>GPU acceleration — the breakthrough</h4>
+                    <p>Porting the full BIP-39 derivation to CUDA/OpenCL enabled recovery of three missing
+                    words in minutes and made three missing words feasible for the first time. The
+                    parallel architecture became the core of the Pro Version.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot">🔄</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">EXPANSION</div>
+                    <h4>Passphrase recovery and the 10-mode architecture</h4>
+                    <p>Real-world use cases demanded more than missing-word recovery: passphrases with
+                    leet-speak substitutions, masked patterns, dictionary attacks, file-based testing.
+                    Each scenario became a dedicated algorithm, growing the platform to 10 recovery modes.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot">💾</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">RELIABILITY</div>
+                    <h4>Work-file system and distributed recovery</h4>
+                    <p>Long recovery jobs needed resilience. The encrypted work-file system enables
+                    pause/resume of any job and distribution across multiple machines, turning what was
+                    a single-machine tool into a coordinated recovery platform.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot">🚀</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">v1.0 — 2026</div>
+                    <h4>Public release</h4>
+                    <p>wrecover 1.0 ships with all 10 recovery modes, full GPU acceleration (CUDA and
+                    OpenCL), an encrypted work-file system, multi-language BIP-39 support, and complete
+                    documentation for every algorithm. Free and Pro versions available.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot">🔭</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">ROADMAP</div>
+                    <h4>What comes next</h4>
+                    <p>Planned improvements include Solana, litcoin, dogcoin and others address verification,
+                    extended BIP-39 language packs, and optimised kernels for the latest GPU architectures.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════ ETHICS ══════════════════════ -->
+<section>
+    <div class="container">
+        <div class="section-label">// responsible use</div>
+        <h2 class="section-title">A tool built for legitimate recovery</h2>
+        <p class="section-intro">
+            wrecover is a dual-use technology. We take our responsibility seriously.
+        </p>
+
+        <div class="ethics-grid">
+            <div class="ethics-card">
+                <span class="ethics-icon">✅</span>
+                <h4>Designed for owners</h4>
+                <p>Every feature, every algorithm, every interface decision is optimised for the most
+                common legitimate scenario: a person recovering access to a wallet they created and own.
+                The tool's power is proportional to the knowledge you already have about your own wallet.</p>
+            </div>
+            <div class="ethics-card">
+                <span class="ethics-icon">🚫</span>
+                <h4>Zero-knowledge architecture</h4>
+                <p>The local-only architecture is both a privacy feature and an ethical stance.
+                We cannot access your recovery data. We have no server that could be subpoenaed.
+                The cryptographic keys you're recovering never touch any infrastructure we control.</p>
+            </div>
+            <div class="ethics-card">
+                <span class="ethics-icon">⚖️</span>
+                <h4>Legal use requirement</h4>
+                <p>The license agreement is explicit: wrecover may only be used to recover wallets
+                you legally own or have explicit written authorization to access. Any other use violates
+                both the license and, in most jurisdictions, the law.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════ CONTACT CTA ══════════════════════ -->
+<div class="contact-section">
+    <h2>Let's talk recovery</h2>
+    <p>Have a question about your specific recovery scenario? Need technical support for the Pro Version?
+    Want to report a bug or suggest a feature?</p>
+    <div class="cta-row">
+        <a href="index.html#download" class="btn-primary">Download wrecover</a>
+        <a href="docs.html" class="btn-outline">Read the Docs</a>
+        <a href="eula.html" class="btn-outline">License Agreement</a>
+        <a href="about.html" class="btn-outline">About</a>
+    </div>
+</div>
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer>
+    <p>
+        © 2026 <strong style="color: var(--accent-cyan);">Romanus de DRAVO</strong> — All Rights Reserved.
+        &nbsp;·&nbsp;
+        <a href="eula.html">License</a>
+        &nbsp;·&nbsp;
+        <a href="about.html">About</a>
+        &nbsp;·&nbsp;
+        <a href="index.html">Home</a>
+    </p>
+</footer>
+
+
+    <script>
+        const hbg=document.getElementById('hamburger'),
+              nav=document.getElementById('navLinksMenu'),
+              ovl=document.getElementById('navOverlay');
+        function toggle(open){
+            hbg.classList.toggle('open',open);
+            nav.classList.toggle('nav-open',open);
+            ovl.classList.toggle('active',open);
+            hbg.setAttribute('aria-expanded',open);
+            document.body.style.overflow=open?'hidden':'';
+        }
+        hbg.addEventListener('click',()=>toggle(!nav.classList.contains('nav-open')));
+        ovl.addEventListener('click',()=>toggle(false));
+        nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>toggle(false)));
+    </script>
+</body>
+</html>

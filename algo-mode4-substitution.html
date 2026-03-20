@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Substitution - wrecover Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        html,body{overflow-x:hidden;max-width:100%}*,*::before,*::after{max-width:100%}img,video,svg,canvas{max-width:100%;height:auto}@media(max-width:860px){.container,.doc-section{box-sizing:border-box;max-width:100vw}.code-block{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;word-break:normal;white-space:pre}.code-block code{display:block;white-space:pre}table{display:block;max-width:100%;overflow-x:auto}.info-box,.warning-box,.success-box,.notice-box{box-sizing:border-box;max-width:100%;overflow-wrap:break-word;word-break:break-word}p,li,td,th{overflow-wrap:break-word;word-break:break-word}}*{margin:0;padding:0;box-sizing:border-box}:root{--primary-dark:#0a0e27;--accent-cyan:#00d9ff;--accent-green:#00ff88;--text-primary:#e8e8f0;--text-secondary:#9ca3af;--border-color:#1e2947;--card-bg:#0f1535}body{font-family:'IBM Plex Sans',sans-serif;background:var(--primary-dark);color:var(--text-primary);line-height:1.6}.container{max-width:1200px;margin:0 auto;padding:2rem}.back-link{display:inline-block;color:var(--accent-cyan);text-decoration:none;margin-bottom:2rem;font-weight:500}h1{font-family:'Orbitron',sans-serif;font-size:3rem;background:linear-gradient(135deg,var(--accent-cyan) 0%,var(--accent-green) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}.subtitle{color:var(--text-secondary);font-size:1.2rem;margin-bottom:3rem}.doc-section{background:var(--card-bg);padding:2.5rem;border-radius:16px;border-left:4px solid var(--accent-cyan);margin-bottom:2rem}h2{font-family:'Orbitron',sans-serif;color:var(--accent-cyan);font-size:1.8rem;margin-bottom:1.5rem}h3{font-family:'JetBrains Mono',monospace;color:var(--accent-green);font-size:1.3rem;margin:2rem 0 1rem}p{color:var(--text-secondary);margin-bottom:1rem;line-height:1.8}.code-block{background:var(--primary-dark);border:1px solid var(--border-color);border-radius:8px;padding:1.5rem;font-family:'JetBrains Mono',monospace;font-size:.9rem;overflow-x:auto;margin:1rem 0}.code-block code{color:var(--accent-green)}.comment{color:#6b7280}.info-box{background:rgba(0,217,255,.1);border-left:4px solid var(--accent-cyan);padding:1.5rem;border-radius:8px;margin:1.5rem 0}.info-box strong{color:var(--accent-cyan);display:block;margin-bottom:.5rem}.warning-box{background:rgba(255,170,0,.1);border-left:4px solid #ffaa00;padding:1.5rem;border-radius:8px;margin:1.5rem 0}.warning-box strong{color:#ffaa00;display:block;margin-bottom:.5rem}.success-box{background:rgba(0,255,136,.1);border-left:4px solid var(--accent-green);padding:1.5rem;border-radius:8px;margin:1.5rem 0}.success-box strong{color:var(--accent-green);display:block;margin-bottom:.5rem}table{width:100%;border-collapse:collapse;margin:2rem 0}th,td{padding:1rem;text-align:left;border-bottom:1px solid var(--border-color)}th{background:var(--primary-dark);color:var(--accent-cyan)}td{color:var(--text-secondary)}ul,ol{margin-left:2rem;color:var(--text-secondary);line-height:2}@media(max-width:680px){h1{font-size:2rem}h2{font-size:1.3rem}h3{font-size:1.1rem}.subtitle{font-size:1rem;margin-bottom:2rem}.container{padding:1rem}.doc-section{padding:1.5rem 1rem;border-radius:10px}.code-block{padding:1rem;font-size:.8rem}.info-box,.warning-box,.success-box{padding:1rem}table{font-size:.85rem}th,td{padding:.6rem .7rem}ul,ol{margin-left:1.2rem}.back-link{font-size:.9rem}}
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="docs.html" class="back-link">&larr; Back to Documentation</a>
+    <h1>Character Substitution</h1>
+    <p class="subtitle">Mode 4: Recover a passphrase by testing common character substitutions on a word list</p>
+
+    <div class="doc-section">
+        <h2>&#128203; Overview</h2>
+        <p>Mode 4 is designed for passphrases that were originally words or phrases but with some characters replaced by look-alike characters (leet-speak style). You provide a <strong>dictionary file</strong> containing your candidate words or phrases (one per line). wrecover automatically generates all possible character-substitution variants of each entry and tests every variant against the target address.</p>
+        <p>For example, if the dictionary contains <code>password</code>, wrecover will also try <code>p@ssword</code>, <code>passw0rd</code>, <code>p@ssw0rd</code>, <code>P@55w0rd</code>, and every other combination of common substitutions.</p>
+        <div class="info-box">
+            <strong>&#128161; GPU Supported</strong>
+            <p>Mode 4 fully supports GPU acceleration (CUDA and OpenCL) in the Pro version.</p>
+        </div>
+        <div class="info-box">
+            <strong>&#128161; How substitutions work</strong>
+            <p>wrecover builds an index of all substitution variants for each character in each word (e.g. <code>a</code> &rarr; <code>a</code>/<code>@</code>/<code>4</code>/<code>A</code>, <code>o</code> &rarr; <code>o</code>/<code>0</code>/<code>O</code>, etc.), then generates the Cartesian product. The total variant count depends on the dictionary entries and how many substitutable characters they contain.</p>
+        </div>
+    </div>
+
+    <div class="doc-section">
+        <h2>&#128196; Dictionary File Format</h2>
+        <p>The dictionary file is a plain text file (.txt), one candidate word or phrase per line. The file is converted internally to a binary index for fast processing.</p>
+        <div class="code-block"><code><span class="comment"># dictionary.txt — one entry per line</span><br>
+password<br>
+bitcoin<br>
+satoshi<br>
+MySecret<br>
+Summer2023<br>
+hodl</code></div>
+        <div class="warning-box">
+            <strong>&#9888;&#65039; File extension</strong>
+            <p>The dictionary file must have a <code>.txt</code> extension when starting a new search (<code>-ws</code>). During resume (<code>-wi</code>), wrecover expects the <code>.bin</code> version (automatically generated alongside the <code>.txt</code> at first run). You must supply the <code>.bin</code> path with <code>-pps</code> when resuming.</p>
+        </div>
+    </div>
+
+    <div class="doc-section">
+        <h2>&#128640; Commands</h2>
+
+        <h3>New search &mdash; CPU</h3>
+        <div class="code-block"><code>wrecover -m 4 -mf "word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12" -pps dictionary.txt -addr "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa" -wlang en -ws -wf recovery.wrec "this workfile password"</code></div>
+
+        <h3>New search &mdash; GPU (Pro)</h3>
+        <div class="code-block"><code>wrecover -m 4 -mf "word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12" -pps dictionary.txt -addr "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa" -wlang en -ws -wf recovery.wrec "this workfile password" -gpu -grid 2048 -gblock 256</code></div>
+
+        <h3>Resume (provide the .bin file generated at first run)</h3>
+        <div class="code-block"><code> <span class="comment"># CPU</span><br>
+            wrecover -wi -wf recovery.wrec -wp "this workfile password" -pps dictionary.bin<br><br>
+            <span class="comment"># GPU (Pro)</span><br>
+            wrecover -wi -wf recovery.wrec -wp "this workfile password" -pps dictionary.bin -gpu -grid 2048 -gblock 256    </code>
+        </div>
+    </div>
+
+    <div class="doc-section">
+        <h2>&#128214; Parameter Reference</h2>
+        <table>
+            <thead><tr><th>Option</th><th>Description</th><th>Required</th></tr></thead>
+            <tbody>
+                <tr><td><code>-m 4</code></td><td>Select Mode 4</td><td>Yes</td></tr>
+                <tr><td><code>-mf "&lt;full mnemonic&gt;"</code></td><td>Complete, known seed phrase (all words)</td><td>Yes</td></tr>
+                <tr><td><code>-pps &lt;file.txt&gt;</code></td><td>Dictionary file (.txt for new search, .bin for resume)</td><td>Yes</td></tr>
+                <tr><td><code>-addr &lt;address&gt;</code></td><td>Target blockchain address</td><td>Yes</td></tr>
+                <tr><td><code>-wlang &lt;code&gt;</code></td><td>BIP39 wordlist language</td><td>Yes</td></tr>
+                <tr><td><code>-ws</code></td><td>New search</td><td>Yes*</td></tr>
+                <tr><td><code>-wi</code></td><td>Resume from work file</td><td>Yes*</td></tr>
+                <tr><td><code>-wf &lt;file.wrec&gt;</code></td><td>Work file path</td><td>Yes</td></tr>
+                <tr><td><code>-dpath &lt;path&gt;</code></td><td>Override derivation path</td><td>No</td></tr>
+                <tr><td><code>-t &lt;N&gt;</code></td><td>CPU threads (Free: max 10; Pro: unlimited)</td><td>No</td></tr>
+                <tr><td><code>-gpu</code></td><td>Enable GPU (Pro only)</td><td>No</td></tr>
+                <tr><td><code>-grid &lt;N&gt;</code></td><td>GPU grid size (Pro, default 256)</td><td>No</td></tr>
+                <tr><td><code>-gblock &lt;N&gt;</code></td><td>GPU threads/block (Pro, default 256, max 256)</td><td>No</td></tr>
+                <tr><td><code>-wp &lt;password&gt;</code></td><td>Encrypt work file</td><td>No</td></tr>
+                <tr><td><code>-save-only</code></td><td>Create work file only</td><td>No</td></tr>
+                <tr><td><code>-startp &lt;N&gt;</code></td><td>Start at offset N (Pro only)</td><td>No</td></tr>
+                <tr><td><code>-endp &lt;N&gt;</code></td><td>Stop at offset N (Pro only)</td><td>No</td></tr>
+            </tbody>
+        </table>
+        <p style="font-size:0.9rem;margin-top:0.5rem;">* Use either <code>-ws</code> (new search) or <code>-wi</code> (resume) &mdash; not both.</p>
+    </div>
+
+    <div class="doc-section">
+        <h2>&#127758; Languages &amp; Address Types</h2>
+        <h3>Languages (<code>-wlang</code>)</h3>
+        <table>
+            <thead><tr><th>Code</th><th>Language</th></tr></thead>
+            <tbody>
+                <tr><td><code>en</code></td><td>English</td></tr>
+                <tr><td><code>es</code></td><td>Spanish</td></tr>
+                <tr><td><code>fr</code></td><td>French</td></tr>
+                <tr><td><code>it</code></td><td>Italian</td></tr>
+            </tbody>
+        </table>
+        <h3>Address types (auto-detected)</h3>
+        <table>
+            <thead><tr><th>Address format</th><th>Type</th><th>Default derivation path</th></tr></thead>
+            <tbody>
+                <tr><td>Starts with <code>1</code></td><td>Bitcoin Legacy (P2PKH)</td><td><code>m/44'/0'/0'/0</code></td></tr>
+                <tr><td>Starts with <code>3</code></td><td>Bitcoin SegWit P2SH</td><td><code>m/49'/0'/0'/0</code></td></tr>
+                <tr><td>Starts with <code>bc1q</code></td><td>Bitcoin Native SegWit</td><td><code>m/84'/0'/0'/0</code></td></tr>
+                <tr><td>Starts with <code>0x</code></td><td>Ethereum</td><td><code>m/44'/60'/0'/0</code></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="doc-section">
+        <h2>&#9889; Performance</h2>
+        <p>The total number of variants depends on the dictionary content. A word like <code>password</code> (8 chars, many substitutable characters) can generate hundreds of thousands of variants on its own. Performance scales with the total variant count across all dictionary entries.</p>
+        <table>
+            <thead><tr><th>Hardware</th><th>Passphrase throughput</th></tr></thead>
+            <tbody>
+                <tr><td>CPU &mdash; per thread (Free &amp; Pro)</td><td>700&ndash;1,200 passphrases/sec</td></tr>
+                <tr><td>NVIDIA Tesla T4 (Pro)</td><td>~187,000 passphrases/sec</td></tr>
+                <tr><td>NVIDIA RTX PRO 6000 (Pro)</td><td>~1,750,000 passphrases/sec</td></tr>
+                <tr><td>N&times; GPUs (Pro)</td><td>Linear: N &times; single-GPU throughput</td></tr>
+            </tbody>
+        </table>
+        <div class="info-box">
+            <strong>&#128161; Free vs Pro</strong>
+            <p>Free version: CPU only, max 10 threads. Pro: unlimited threads + GPU. Throughput scales linearly with thread count on CPU.</p>
+        </div>
+    </div>
+
+    <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border-color);text-align:center;">
+        <a href="docs.html" class="back-link">&larr; Back to Documentation</a>
+    </div>
+</div>
+</body>
+</html>

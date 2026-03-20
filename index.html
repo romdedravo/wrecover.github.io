@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wrecover - Professional Wallet Recovery & Seed Phrase Recovery Tool</title>
+    <meta name="description" content="Advanced cryptocurrency wallet recovery solution with GPU acceleration and multi-threading support. Recover lost Bitcoin, Ethereum, and other crypto wallets.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+
+        /* ── Anti-overflow global (mobile) ──────────────────── */
+        html, body { overflow-x: hidden; max-width: 100%; }
+        *, *::before, *::after { max-width: 100%; box-sizing: border-box; }
+        img, video, svg, canvas { max-width: 100%; height: auto; }
+        @media (max-width: 860px) {
+            .container, .doc-section, .main-content, .page-wrapper, .section-content {
+                box-sizing: border-box; max-width: 100vw;
+            }
+            .code-block {
+                max-width: 100%; overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                word-break: normal; white-space: pre;
+            }
+            table {
+                display: block; max-width: 100%;
+                overflow-x: auto; -webkit-overflow-scrolling: touch;
+            }
+            p, li, td, th, h1, h2, h3 {
+                overflow-wrap: break-word; word-break: break-word;
+            }
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-dark: #0a0e27;
+            --secondary-dark: #141b3d;
+            --accent-cyan: #00d9ff;
+            --accent-gold: #ffd700;
+            --accent-green: #00ff88;
+            --text-primary: #e8e8f0;
+            --text-secondary: #9ca3af;
+            --border-color: #1e2947;
+            --card-bg: #0f1535;
+            --gradient-1: linear-gradient(135deg, #0a0e27 0%, #1a1f45 100%);
+            --gradient-2: linear-gradient(135deg, #00d9ff 0%, #0066ff 100%);
+            --gradient-3: linear-gradient(135deg, #ffd700 0%, #ff6b00 100%);
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: var(--primary-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 217, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 217, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .glow-effect {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 217, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .glow-1 { top: -200px; left: -200px; animation-delay: 0s; }
+        .glow-2 { bottom: -200px; right: -200px; animation-delay: 7s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(100px, 100px) scale(1.1); }
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--accent-cyan);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-2);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .btn-download {
+            padding: 0.75rem 2rem;
+            background: var(--gradient-2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.4);
+        }
+
+        /* Hamburger button */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 28px;
+            height: 20px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            z-index: 1100;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-cyan);
+            border-radius: 2px;
+            transition: all 0.35s ease;
+            transform-origin: center;
+        }
+
+        /* Animated cross when open */
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        /* Responsive nav */
+        @media (max-width: 860px) {
+            .hamburger {
+                display: flex;
+            }
+
+            nav ul {
+                position: fixed;
+                top: 0;
+                right: 0;
+                height: 100vh;
+                width: min(300px, 80vw);
+                background: rgba(10, 14, 39, 0.98);
+                backdrop-filter: blur(16px);
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0;
+                padding: 6rem 2rem 2rem;
+                border-left: 1px solid var(--border-color);
+                transform: translateX(110%);
+                transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 1050;
+            }
+
+            nav ul.nav-open {
+                transform: translateX(0);
+            }
+
+            nav ul li {
+                width: 100%;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            nav ul li:last-child {
+                border-bottom: none;
+                padding-top: 1.5rem;
+            }
+
+            nav a {
+                display: block;
+                padding: 1.1rem 0;
+                font-size: 1.1rem;
+            }
+
+            nav a::after {
+                display: none;
+            }
+
+            .btn-download {
+                width: 100%;
+                text-align: center;
+            }
+
+            /* Overlay behind the panel */
+            .nav-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.55);
+                z-index: 800;
+            }
+
+            .nav-overlay.active {
+                display: block;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 8rem 2rem 6rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-green) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+            animation: slideDown 1s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            animation: fadeIn 1s ease-out 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeIn 1s ease-out 0.6s both;
+        }
+
+        .btn-primary {
+            padding: 1.2rem 3rem;
+            background: var(--gradient-2);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 217, 255, 0.5);
+        }
+
+        .btn-secondary {
+            padding: 1.2rem 3rem;
+            background: transparent;
+            border: 2px solid var(--accent-cyan);
+            border-radius: 12px;
+            color: var(--accent-cyan);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Video Section */
+        .video-section {
+            max-width: 1200px;
+            margin: 6rem auto;
+            padding: 0 2rem;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1f45 0%, #0a0e27 100%);
+            border: 2px dashed var(--border-color);
+        }
+
+        .video-placeholder-text {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .video-placeholder-text h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--accent-cyan);
+        }
+
+        /* Features Section */
+        .features {
+            max-width: 1400px;
+            margin: 8rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(350px, 100%), 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 15px 40px rgba(0, 217, 255, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .feature-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-cyan);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Version Comparison */
+        .comparison {
+            max-width: 1400px;
+            margin: 8rem auto;
+            padding: 0 2rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .version-card {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 2px solid var(--border-color);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .version-card.featured {
+            border-color: var(--accent-gold);
+            transform: scale(1.02);
+        }
+
+        .version-card.featured::before {
+            content: 'RECOMMENDED';
+            position: absolute;
+            top: -15px;
+            right: 30px;
+            background: var(--gradient-3);
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .version-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 217, 255, 0.3);
+        }
+
+        .version-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .version-price {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .version-price.free {
+            color: var(--accent-green);
+            -webkit-text-fill-color: var(--accent-green);
+        }
+
+        .version-card ul {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .version-card li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .version-card li:last-child {
+            border-bottom: none;
+        }
+
+        .check-icon {
+            color: var(--accent-green);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .cross-icon {
+            color: #ff4444;
+            flex-shrink: 0;
+        }
+
+        .license-note {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--accent-gold);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .license-note strong {
+            color: var(--accent-gold);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Screenshots Gallery */
+        .screenshots {
+            max-width: 1400px;
+            margin: 8rem auto;
+            padding: 0 2rem;
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(500px, 100%), 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .screenshot-placeholder {
+            aspect-ratio: 16/10;
+            /* background: var(--card-bg); */
+            /* border: 2px dashed var(--border-color); */
+            /* border-radius: 16px; */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .screenshot-placeholder:hover {
+            /* border-color: var(--accent-cyan); */
+            transform: scale(1.02);
+        }
+
+        .screenshot-placeholder p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        /* Documentation Section */
+        .documentation {
+            max-width: 1200px;
+            margin: 8rem auto;
+            padding: 0 2rem;
+        }
+
+        .doc-grid {
+            display: grid;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .doc-section {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 16px;
+            border-left: 4px solid var(--accent-cyan);
+        }
+
+        .doc-section h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-cyan);
+        }
+
+        .doc-section h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            margin: 2rem 0 1rem;
+            color: var(--accent-green);
+        }
+
+        .doc-section p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .code-block {
+            background: var(--primary-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .code-block code {
+            color: var(--accent-green);
+        }
+
+        .warning-box {
+            background: rgba(255, 68, 68, 0.1);
+            border-left: 4px solid #ff4444;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box strong {
+            color: #ff4444;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 4px solid var(--accent-cyan);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .info-box strong {
+            color: var(--accent-cyan);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .doc-section table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+
+        .doc-section th,
+        .doc-section td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .doc-section th {
+            background: var(--primary-dark);
+            color: var(--accent-cyan);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .doc-section td {
+            color: var(--text-secondary);
+        }
+
+        /* ── Footer ─────────────────────────────────────────────── */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 2rem; text-align: center;
+        }
+        footer p { color: var(--text-secondary); font-size: .9rem; }
+        footer a { color: var(--accent-cyan); text-decoration: none; }
+
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .features-grid,
+            .comparison-grid,
+            .screenshots-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    
+        @media (max-width: 860px) {
+            /* Grids: force single column on mobile */
+            .modes-grid,
+            .features-grid,
+            .stats-grid,
+            .comparison-grid {
+                grid-template-columns: 1fr !important;
+            }
+            /* Glow blobs: clip them */
+            .glow, [class*="glow"], [class*="blob"] {
+                width: 300px !important;
+                height: 300px !important;
+            }
+            /* Hero: reduce padding */
+            .hero-section, section {
+                padding-left: 1.2rem !important;
+                padding-right: 1.2rem !important;
+            }
+            /* Nav wrapper */
+            nav > * {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="glow-effect glow-1"></div>
+    <div class="glow-effect glow-2"></div>
+
+    <!-- Header -->
+    <div class="nav-overlay" id="navOverlay"></div>
+    <header>
+        <nav>
+            <a href="#" class="logo"><img src="logo.png" alt="wrecover logo" style="width:36px;height:36px;border-radius:8px;flex-shrink:0;">wrecover</a>
+            <ul id="navMenu">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#versions">Versions</a></li>
+                <li><a href="#screenshots">Screenshots</a></li>
+                <li><a href="docs.html">Documentation</a></li>
+                <li><a href="eula.html">License</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="#download" class="btn-download">Download</a></li>
+            </ul>
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Professional Wallet Recovery</h1>
+        <p>Advanced cryptocurrency wallet and seed phrase recovery tool with GPU acceleration, multi-threading support, and powerful brute-force capabilities. Recover your lost Bitcoin, Ethereum, and other crypto assets.</p>
+        <div class="hero-buttons">
+            <a href="#download" class="btn-primary">Download Free Version</a>
+            <a href="#versions" class="btn-secondary">Compare Versions</a>
+        </div>
+    </section>
+
+    <!-- Video Section -->
+    <section class="video-section">
+        <div class="video-container">
+            <div class="video-placeholder">
+                <div class="video-placeholder-text">
+                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/rsBstaV5wXU?controls=0&color=white&modestbranding=1&ref=0" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <h2 class="section-title">Powerful Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>GPU Acceleration</h3>
+                <p>Leverage the full power of modern NVIDIA and AMD GPUs for lightning-fast recovery. The Free version includes GPU support for Mode 1 (up to 3 missing words) so you can benchmark GPU speed before upgrading. The Pro version unlocks full multi-GPU acceleration across all modes.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <h3>Multi-Threading</h3>
+                <p>Efficient CPU utilization with configurable thread counts. Free version supports up to 10 threads, while Pro version offers unlimited threading for maximum CPU efficiency.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔐</div>
+                <h3>Multiple Wallet Types</h3>
+                <p>Support for Bitcoin (P2PKH, P2SH, Native SegWit), Ethereum.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Smart Recovery Algorithms</h3>
+                <p>Advanced brute-force and pattern-based recovery methods. Optimized algorithms specifically designed for cryptocurrency wallet recovery.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Real-Time Progress</h3>
+                <p>Monitor recovery progress with detailed statistics, speed metrics, and estimated time remaining. Beautiful GUI interface for easy monitoring.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>Secure & Private</h3>
+                <p>All recovery operations are performed locally on your machine. Your wallet data never leaves your computer, ensuring maximum security and privacy.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Version Comparison -->
+    <section id="versions" class="comparison">
+        <h2 class="section-title">Choose Your Version</h2>
+        <div class="comparison-grid">
+            <!-- Free Version -->
+            <div class="version-card">
+                <h3 class="version-name">Free Version</h3>
+                <div class="version-price free">FREE</div>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">Perfect for individual users and basic recovery needs</p>
+                <ul>
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <span>CPU-based recovery only</span>
+                    </li>
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <span>Maximum 10 threads</span>
+                    </li>
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <span>Support for Bitcoin (P2PKH, P2SH, Native SegWit), Ethereum</span>
+                    </li>
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <span>Basic brute-force methods</span>
+                    </li>
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <span>GPU acceleration — Mode 1 only, max 3 missing words (speed test)</span>
+                    </li>
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <span>Command line only</span>
+                    </li>
+                    <li>
+                        <span class="cross-icon">✗</span>
+                        <span>No source code access</span>
+                    </li>
+                    <li>
+                        <span class="cross-icon">✗</span>
+                        <span>Limited advanced features</span>
+                    </li>
+                </ul>
+                <a href="https://github.com/romdedravo/wrecover/releases/tag/v1.0" class="btn-primary" style="width: 100%; text-align: center;">Download Free</a>
+            </div>
+
+            <!-- Pro Version -->
+            <div class="version-card featured">
+                <h3 class="version-name">Pro Version</h3>
+                <div class="version-price">Contact Sales</div>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">Professional solution with full GPU and source code</p>
+                <ul>
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <span>Multi-GPU acceleration (NVIDIA & AMD)</span>
+                    </li>
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <span>Unlimited threading</span>
+                    </li>
+                    
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <span>Advanced recovery algorithms</span>
+                    </li>
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <span>Full source code included</span>
+                    </li>
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <span>Internal modification allowed</span>
+                    </li>
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <span>Command line + GUI</span>
+                    </li>
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <span>Priority support</span>
+                    </li>
+                    <li>
+                        <span class="check-icon">✓</span>
+                        <span>Custom feature development</span>
+                    </li>
+                </ul>
+                <div class="license-note">
+                    <strong>⚠️ License Terms:</strong>
+                    Source code modifications are permitted for internal use only. Redistribution, sharing, or commercial resale of modified or unmodified code is strictly prohibited and legally enforced.
+                </div>
+                <a href="https://btcpay.btc.aw/apps/2SKAKfLH8ACW8Z6N5dxv116z65nm" class="btn-primary" style="width: 100%; text-align: center;">Buy pro version</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots -->
+    <section id="screenshots" class="screenshots">
+        <h2 class="section-title">Application Screenshots</h2>
+        <div class="screenshots-grid">
+            <div class="screenshot-placeholder">
+                <img src="img/RTX6000.jpg">
+            </div>
+            <div class="screenshot-placeholder">
+                <img src="img/8xRTX6000.jpg">
+            </div>
+            <div class="screenshot-placeholder">
+                <img src="img/import.PNG">
+            </div>
+            <div class="screenshot-placeholder">
+                <img src="img/engine.jpg">
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="features" style="margin-top: 8rem;">
+        <h2 class="section-title">Download wrecover</h2>
+        <div class="features-grid" style="max-width: 900px; margin: 0 auto;">
+            <div class="feature-card" style="text-align: center;">
+                <div class="feature-icon">🪟</div>
+                <h3>Windows</h3>
+                <p>Windows 10/11 (64-bit)</p>
+                <a href="https://github.com/romdedravo/wrecover/releases/download/v1.0/wrecover_windows_v1.0_free.zip" class="btn-primary" style="margin-top: 1.5rem;">Download for Windows</a>
+            </div>
+            <div class="feature-card" style="text-align: center;">
+                <div class="feature-icon">🐧</div>
+                <h3>Linux</h3>
+                <p>Ubuntu 20.04+ / Debian / Fedora</p>
+                <a href="https://github.com/romdedravo/wrecover/releases/download/v1.0/wrecover_linux_v1.0_free.zip" class="btn-primary" style="margin-top: 1.5rem;">Download for Linux</a>
+            </div>
+        </div>
+        <p style="text-align: center; color: var(--text-secondary); margin-top: 3rem;">
+            For the Pro version with GPU support and source code access.
+        </p>
+    </section>
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer>
+    <p>
+        © 2026 <strong style="color: var(--accent-cyan);">Romanus de DRAVO</strong> — All Rights Reserved.
+        &nbsp;·&nbsp;
+        <a href="eula.html">License</a>
+        &nbsp;·&nbsp;
+        <a href="about.html">About</a>
+        &nbsp;·&nbsp;
+        <a href="index.html">Home</a>
+    </p>
+</footer>
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navMenu   = document.getElementById('navMenu');
+        const overlay   = document.getElementById('navOverlay');
+
+        function toggleMenu(open) {
+            hamburger.classList.toggle('open', open);
+            navMenu.classList.toggle('nav-open', open);
+            overlay.classList.toggle('active', open);
+            hamburger.setAttribute('aria-expanded', open);
+            document.body.style.overflow = open ? 'hidden' : '';
+        }
+
+        hamburger.addEventListener('click', () => {
+            const isOpen = navMenu.classList.contains('nav-open');
+            toggleMenu(!isOpen);
+        });
+
+        overlay.addEventListener('click', () => toggleMenu(false));
+
+        // Close menu when a nav link is clicked
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => toggleMenu(false));
+        });
+    </script>
+</body>
+</html>

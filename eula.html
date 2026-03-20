@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wrecover - End User License Agreement (EULA)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+
+        /* ── Anti-overflow global (mobile) ──────────────────── 10.2*/
+        html, body {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+        *, *::before, *::after {
+            max-width: 100%;
+        }
+        img, video, svg, canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        @media (max-width: 860px) {
+            .container,
+            .doc-section,
+            .main-content,
+            .page-wrapper,
+            .doc-body {
+                box-sizing: border-box;
+                max-width: 100vw;
+            }
+            /* Code blocks: scrollable horizontally inside, don't bleed out */
+            .code-block {
+                max-width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                word-break: normal;
+                white-space: pre;
+            }
+            .code-block code {
+                display: block;
+                white-space: pre;
+            }
+            /* Tables: scrollable inside wrapper */
+            table {
+                display: block;
+                max-width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            /* Info / warning / success boxes */
+            .info-box, .warning-box, .success-box, .notice-box {
+                box-sizing: border-box;
+                max-width: 100%;
+                overflow-wrap: break-word;
+                word-break: break-word;
+            }
+            /* Long words and URLs */
+            p, li, td, th {
+                overflow-wrap: break-word;
+                word-break: break-word;
+            }
+        }
+        /* ===========================
+           SCREEN STYLES
+        =========================== */
+        :root {
+            --primary-dark: #0a0e27;
+            --accent-cyan: #00d9ff;
+            --accent-gold: #ffd700;
+            --accent-green: #00ff88;
+            --text-primary: #e8e8f0;
+            --text-secondary: #9ca3af;
+            --border-color: #1e2947;
+            --card-bg: #0f1535;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--primary-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        /* Navigation bar */
+        .site-nav {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .site-logo {
+            font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-cyan), #0066ff);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: 2px; text-decoration: none;
+            display: flex; align-items: center; gap: .5rem;
+        }
+
+        .back-link {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+
+        /* Print button */
+        .print-btn {
+            background: linear-gradient(135deg, #00d9ff, #0066ff);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .print-btn:hover {
+            box-shadow: 0 6px 20px rgba(0, 217, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Outer page wrapper */
+        .page-wrapper {
+            max-width: 960px;
+            margin: 3rem auto;
+            padding: 0 2rem 4rem;
+        }
+
+        /* Document shell (the "paper") */
+        .document {
+            background: #fafaf8;
+            color: #1a1a1a;
+            border-radius: 4px;
+            box-shadow: 0 20px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+            overflow: hidden;
+        }
+
+        /* Header band */
+        .doc-header {
+            background: linear-gradient(135deg, #0a1628 0%, #13264d 50%, #0a1628 100%);
+            padding: 3.5rem 4rem 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .doc-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                linear-gradient(rgba(0,217,255,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,217,255,0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .doc-header-inner { position: relative; z-index: 1; }
+
+        .doc-header .software-name {
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #00d9ff;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 0.3rem;
+        }
+
+        .doc-header .doc-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.3rem;
+            color: #a0c4d8;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+
+        .header-meta {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .header-meta-item {
+            text-align: center;
+        }
+
+        .header-meta-item .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #4a7a9b;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .header-meta-item .value {
+            font-size: 0.9rem;
+            color: #c8dde8;
+            font-weight: 600;
+        }
+
+        .header-divider {
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00d9ff, transparent);
+            margin: 1.8rem auto;
+        }
+
+        /* Alert band */
+        .alert-band {
+            background: #fff8e6;
+            border-top: 3px solid #d4a017;
+            border-bottom: 3px solid #d4a017;
+            padding: 1.2rem 4rem;
+            text-align: center;
+        }
+
+        .alert-band p {
+            color: #7a5a00;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .alert-band strong { color: #5a4000; }
+
+        /* Document body */
+        .doc-body {
+            padding: 3rem 4rem 4rem;
+            font-family: 'Libre Baskerville', serif;
+            font-size: 10.5pt;
+            line-height: 1.75;
+            color: #2a2a2a;
+        }
+
+        /* Preamble box */
+        .preamble {
+            background: #f0f4f8;
+            border-left: 4px solid #1a3a6b;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2.5rem;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .preamble p {
+            font-size: 0.95rem;
+            color: #3a3a4a;
+        }
+
+        /* Article headings */
+        .article {
+            margin-bottom: 2.2rem;
+            page-break-inside: avoid;
+        }
+
+        .article-title {
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 11pt;
+            font-weight: 700;
+            color: #0d2a50;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding-bottom: 0.5rem;
+            border-bottom: 1.5px solid #c8d8e8;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .article-number {
+            background: #0d2a50;
+            color: white;
+            font-size: 9pt;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            letter-spacing: 0;
+            flex-shrink: 0;
+        }
+
+        .article p {
+            margin-bottom: 0.8rem;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        /* Definition list */
+        .definition-item {
+            margin-bottom: 0.7rem;
+            padding-left: 1.5rem;
+        }
+
+        .definition-term {
+            font-weight: 700;
+            font-family: 'Source Sans 3', sans-serif;
+            color: #0d2a50;
+        }
+
+        /* Clause lists */
+        .clause-list {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 0.8rem 0;
+        }
+
+        .clause-list > li {
+            padding: 0.4rem 0 0.4rem 2rem;
+            position: relative;
+            text-align: justify;
+        }
+
+        .clause-list > li::before {
+            content: attr(data-n);
+            position: absolute;
+            left: 0;
+            font-family: 'Source Sans 3', sans-serif;
+            font-weight: 700;
+            color: #0d2a50;
+            font-size: 9.5pt;
+        }
+
+        /* Sub-clauses (a, b, c…) */
+        .sub-clause-list {
+            list-style: none;
+            margin: 0.4rem 0 0 1.5rem;
+        }
+
+        .sub-clause-list > li {
+            padding: 0.25rem 0 0.25rem 1.8rem;
+            position: relative;
+        }
+
+        .sub-clause-list > li::before {
+            content: attr(data-n);
+            position: absolute;
+            left: 0;
+            font-family: 'Source Sans 3', sans-serif;
+            color: #3a3a4a;
+            font-size: 9.5pt;
+        }
+
+        /* Allowed / Prohibited boxes */
+        .permission-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0 1.2rem;
+        }
+
+        .perm-box {
+            padding: 1rem 1.2rem;
+            border-radius: 4px;
+        }
+
+        .perm-box.allowed {
+            background: #edfaf3;
+            border: 1px solid #5cb87a;
+        }
+
+        .perm-box.prohibited {
+            background: #fff0f0;
+            border: 1px solid #c0392b;
+        }
+
+        .perm-box h4 {
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 9.5pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.6rem;
+        }
+
+        .perm-box.allowed h4 { color: #1a7a3c; }
+        .perm-box.prohibited h4 { color: #9b2335; }
+
+        .perm-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .perm-box ul li {
+            font-size: 9pt;
+            padding: 0.2rem 0 0.2rem 1.3rem;
+            position: relative;
+            color: #3a3a3a;
+        }
+
+        .perm-box.allowed li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #1a7a3c;
+            font-weight: 700;
+        }
+
+        .perm-box.prohibited li::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: #9b2335;
+            font-weight: 700;
+        }
+
+        /* Version comparison table */
+        .version-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0 1.2rem;
+            font-size: 9.5pt;
+        }
+
+        .version-table th {
+            background: #0d2a50;
+            color: white;
+            padding: 0.7rem 1rem;
+            text-align: left;
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 9pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .version-table th:first-child { width: 40%; }
+
+        .version-table td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid #dde5ed;
+            vertical-align: top;
+            color: #2a2a2a;
+        }
+
+        .version-table tr:nth-child(even) td { background: #f5f7fa; }
+
+        .tag-free {
+            background: #e8f5ff;
+            color: #0d2a50;
+            border: 1px solid #9bc4e2;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 3px;
+            font-size: 8.5pt;
+            font-family: 'Source Sans 3', sans-serif;
+        }
+
+        .tag-pro {
+            background: #fff3cd;
+            color: #7a5a00;
+            border: 1px solid #d4a017;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 3px;
+            font-size: 8.5pt;
+            font-family: 'Source Sans 3', sans-serif;
+        }
+
+        /* Important/warning boxes */
+        .notice-box {
+            border-radius: 4px;
+            padding: 1rem 1.3rem;
+            margin: 1rem 0;
+        }
+
+        .notice-box.warning {
+            background: #fff8e6;
+            border-left: 4px solid #d4a017;
+        }
+
+        .notice-box.danger {
+            background: #fff0f0;
+            border-left: 4px solid #c0392b;
+        }
+
+        .notice-box.info {
+            background: #e8f4fd;
+            border-left: 4px solid #1a6da8;
+        }
+
+        .notice-box h4 {
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 9.5pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.4rem;
+        }
+
+        .notice-box.warning h4 { color: #7a5a00; }
+        .notice-box.danger h4 { color: #9b2335; }
+        .notice-box.info h4 { color: #1a3a6b; }
+
+        .notice-box p {
+            font-size: 9.5pt;
+            text-align: left !important;
+            color: #3a3a3a;
+            margin: 0 !important;
+        }
+
+        /* Signature block */
+        .signature-section {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 2px solid #c8d8e8;
+        }
+
+        .signature-section h3 {
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 10pt;
+            font-weight: 700;
+            color: #0d2a50;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .sig-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .sig-block { padding: 0 1rem; }
+
+        .sig-role {
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 9pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #4a6a8a;
+            margin-bottom: 2.5rem;
+        }
+
+        .sig-line {
+            border-bottom: 1px solid #2a2a2a;
+            margin-bottom: 0.4rem;
+        }
+
+        .sig-label {
+            font-size: 8.5pt;
+            color: #5a5a5a;
+            font-family: 'Source Sans 3', sans-serif;
+        }
+
+        /* Footer */
+        .doc-footer {
+            background: #0d2a50;
+            padding: 1.2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .doc-footer span {
+            color: #6a9abc;
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 8.5pt;
+        }
+
+        .doc-footer .confidential {
+            font-size: 8.5pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #4a8aac;
+        }
+
+        /* TOC */
+        .toc {
+            background: #f5f7fa;
+            border: 1px solid #dde5ed;
+            border-radius: 4px;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .toc-title {
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 9.5pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #0d2a50;
+            margin-bottom: 0.8rem;
+        }
+
+        .toc-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.2rem 2rem;
+            list-style: none;
+        }
+
+        .toc-list li a {
+            font-size: 9pt;
+            color: #1a5590;
+            text-decoration: none;
+            font-family: 'Source Sans 3', sans-serif;
+        }
+
+        .toc-list li a:hover { text-decoration: underline; }
+
+        .toc-list li span {
+            color: #8a8a8a;
+            font-size: 8.5pt;
+        }
+
+        /* ===========================
+           PRINT STYLES
+        =========================== */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+
+            .site-nav, .print-btn { display: none !important; }
+
+            .page-wrapper {
+                margin: 0;
+                padding: 0;
+                max-width: 100%;
+            }
+
+            .document {
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            .doc-header {
+                background: #0d2a50 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .doc-footer {
+                background: #0d2a50 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .article { page-break-inside: avoid; }
+
+            .permission-grid { page-break-inside: avoid; }
+            .version-table { page-break-inside: avoid; }
+            .sig-grid { page-break-inside: avoid; }
+
+            a { color: inherit; text-decoration: none; }
+        }
+
+        @page {
+            size: A4;
+            margin: 1.5cm 2cm;
+        }
+    
+        /* ── Mobile Responsive ──────────────────────────────────── */
+        @media screen and (max-width: 680px) {
+            .site-nav {
+                padding: 0.8rem 1rem;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+            }
+            .print-btn {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.9rem;
+            }
+            .page-wrapper {
+                margin: 1rem auto;
+                padding: 0 0.5rem 3rem;
+            }
+            .doc-header {
+                padding: 2rem 1.5rem 1.5rem;
+            }
+            .doc-header .software-name {
+                font-size: 2rem;
+                letter-spacing: 2px;
+            }
+            .doc-header .doc-title {
+                font-size: 1rem;
+            }
+            .header-meta {
+                gap: 1.2rem;
+            }
+            .header-meta-item .value {
+                font-size: 0.8rem;
+            }
+            .alert-band {
+                padding: 1rem 1.5rem;
+            }
+            .doc-body {
+                padding: 1.5rem 1.2rem 2rem;
+                font-size: 10pt;
+            }
+            .preamble {
+                padding: 1rem 1.2rem;
+            }
+            .article-title {
+                font-size: 10pt;
+                flex-wrap: wrap;
+            }
+            .permission-grid {
+                grid-template-columns: 1fr;
+            }
+            .version-table,
+            table {
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                font-size: 9pt;
+            }
+            .toc-list {
+                grid-template-columns: 1fr;
+            }
+            .sig-grid {
+                grid-template-columns: 1fr;
+            }
+            .doc-footer {
+                padding: 1rem 1.5rem;
+                flex-direction: column;
+                gap: 0.4rem;
+                text-align: center;
+            }
+        }
+    
+        /* ── Mobile hamburger (desktop inchangé) ───────────── */
+        .hamburger {
+            display: none; flex-direction: column; justify-content: space-between;
+            width: 26px; height: 18px; cursor: pointer; background: none;
+            border: none; padding: 0; flex-shrink: 0;
+        }
+        .hamburger span {
+            display: block; width: 100%; height: 1.5px;
+            background: var(--accent-cyan, #00d9ff); border-radius: 2px;
+            transition: transform .35s ease, opacity .35s ease; transform-origin: center;
+        }
+        .hamburger.open span:nth-child(1) { transform: translateY(8.25px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .hamburger.open span:nth-child(3) { transform: translateY(-8.25px) rotate(-45deg); }
+        .nav-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,.6); z-index: 1040;
+            backdrop-filter: blur(4px);
+        }
+        .nav-overlay.active { display: block; }
+        @media (max-width: 860px) {
+            .hamburger { display: flex; }
+            .nav-links {
+                position: fixed; top: 0; right: 0; bottom: 0;
+                width: min(280px, 82vw);
+                background: rgba(10,14,39,.98);
+                border-left: 1px solid var(--border-color, #1e2947);
+                flex-direction: column; align-items: flex-start;
+                gap: 0; padding: 5rem 2rem 2rem;
+                list-style: none; display: flex;
+                transform: translateX(110%);
+                visibility: hidden;
+                transition: transform .4s cubic-bezier(.4,0,.2,1), visibility 0s linear .4s;
+                z-index: 1050;
+            }
+            .nav-links.nav-open {
+                transform: translateX(0);
+                visibility: visible;
+                transition: transform .4s cubic-bezier(.4,0,.2,1), visibility 0s linear 0s;
+            }
+            .nav-links li { width: 100%; border-bottom: 1px solid var(--border-color, #1e2947); }
+            .nav-links li:last-child { border-bottom: none; }
+            .nav-links a { display: block; padding: 1rem 0; font-size: 1.05rem; color: #9ca3af !important; text-decoration: none; }
+            .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan, #00d9ff) !important; }
+        }
+
+        @media (max-width: 860px) {
+            .back-link { display: none; }
+            .print-btn { display: none; }
+            .site-nav { justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Site navigation bar -->
+    <div class="nav-overlay" id="navOverlay"></div>
+    <nav class="site-nav">
+        <a href="index.html" class="site-logo"><img src="logo.png" alt="wrecover logo" style="width:32px;height:32px;border-radius:7px;flex-shrink:0;margin-right:6px;vertical-align:middle;">wrecover</a>
+        <a href="index.html" class="back-link">← Back to Home</a>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="document">
+
+            <!-- ══════════════ DOCUMENT HEADER ══════════════ -->
+            <header class="doc-header">
+                <div class="doc-header-inner">
+                    <div class="software-name">wrecover</div>
+                    <div class="doc-title">End User License Agreement</div>
+                    <div class="header-divider"></div>
+                    <div class="header-meta">
+                        <div class="header-meta-item">
+                            <span class="label">Document Reference</span>
+                            <span class="value">WRCV-EULA-2026-v1.0</span>
+                        </div>
+                        <div class="header-meta-item">
+                            <span class="label">Effective Date</span>
+                            <span class="value">January 1, 2026</span>
+                        </div>
+                        <div class="header-meta-item">
+                            <span class="label">Version</span>
+                            <span class="value">1.0</span>
+                        </div>
+                        <div class="header-meta-item">
+                            <span class="label">Author &amp; Licensor</span>
+                            <span class="value">Romanus de DRAVO</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Alert band -->
+            <div class="alert-band">
+                <p><strong>IMPORTANT LEGAL NOTICE — READ CAREFULLY BEFORE INSTALLING OR USING THIS SOFTWARE.</strong> By installing, copying, downloading, accessing, or otherwise using wrecover, you agree to be bound by the terms of this Agreement. If you do not agree, do not install or use this software.</p>
+            </div>
+
+            <!-- ══════════════ DOCUMENT BODY ══════════════ -->
+            <div class="doc-body">
+
+                <!-- Preamble -->
+                <div class="preamble">
+                    <p>This End User License Agreement ("Agreement" or "EULA") is a legal contract between you, either an individual person or a legal entity ("Licensee" or "You"), and Romanus de DRAVO ("Licensor"), the author and sole owner of the wrecover software. This Agreement governs your acquisition and use of the wrecover software ("Software"), including all associated documentation, source code (where applicable), algorithms, data files, updates, and related materials. This Agreement is effective as of the date you first install, access, or otherwise use the Software.</p>
+                </div>
+
+                <!-- Table of Contents -->
+                <div class="toc">
+                    <div class="toc-title">Table of Contents</div>
+                    <ul class="toc-list">
+                        <li><a href="#art1">1. Definitions</a></li>
+                        <li><a href="#art6">6. Intellectual Property</a></li>
+                        <li><a href="#art2">2. Scope of License</a></li>
+                        <li><a href="#art7">7. Confidentiality (Pro Version)</a></li>
+                        <li><a href="#art3">3. License Grants</a></li>
+                        <li><a href="#art8">8. Privacy &amp; Data</a></li>
+                        <li><a href="#art4">4. Restrictions</a></li>
+                        <li><a href="#art9">9. Warranty Disclaimer</a></li>
+                        <li><a href="#art5">5. Source Code (Pro Version)</a></li>
+                        <li><a href="#art10">10. Limitation of Liability</a></li>
+                        <li><a href="#art11">11. Term &amp; Termination</a></li>
+                        <li><a href="#art12">12. General Provisions</a></li>
+                        <li><a href="#art14">13. Acceptance</a></li>
+                    </ul>
+                </div>
+
+
+                <!-- ─── ARTICLE 1 ─── -->
+                <div class="article" id="art1">
+                    <div class="article-title">
+                        <span class="article-number">ART. 1</span>
+                        Definitions
+                    </div>
+
+                    <p>For the purposes of this Agreement, the following terms shall have the meanings set forth below:</p>
+
+                    <div class="definition-item">
+                        <span class="definition-term">"Software" or "wrecover"</span> means the wrecover cryptocurrency wallet recovery application, including all of its constituent files, libraries, modules, algorithms, scripts, binaries, source code (where provided under the Pro Version), user interfaces, documentation, and all updates or new versions thereof made available by the Licensor.
+                    </div>
+
+                    <div class="definition-item">
+                        <span class="definition-term">"Free Version"</span> means the binary-only, feature-limited version of the Software distributed at no charge. It is restricted to a maximum of ten (10) concurrent CPU processing threads and does not include access to the source code. By exception, the Free Version includes GPU acceleration exclusively for Recovery Mode 1 (Mnemonic Brute Force) with a hard limit of three (3) unknown words, for the sole purpose of enabling Licensee to evaluate and benchmark GPU recovery performance. All other GPU-accelerated modes remain exclusive to the Pro Version. The Free Version binary may be freely redistributed to third parties under the conditions set forth in Article 3.1(d) of this Agreement.
+                    </div>
+
+                    <div class="definition-item">
+                        <span class="definition-term">"Pro Version"</span> means the full-featured, commercially licensed version of the Software that includes GPU acceleration, unlimited threading, multi-GPU support, and access to the complete source code under the terms and conditions of this Agreement.
+                    </div>
+
+                    <div class="definition-item">
+                        <span class="definition-term">"Source Code"</span> means the human-readable form of the Software's program instructions, including all C++, CUDA, OpenCL, and header files, together with associated build scripts and related configuration files, as delivered exclusively under the Pro Version license.
+                    </div>
+
+                    <div class="definition-item">
+                        <span class="definition-term">"Internal Use"</span> means use of the Software solely within Licensee's own organization, on hardware owned or leased by Licensee, exclusively for Licensee's own business or personal recovery operations, without any form of external distribution, access, or benefit to third parties.
+                    </div>
+
+                    <div class="definition-item">
+                        <span class="definition-term">"Derivative Work"</span> means any work that is based upon, derived from, or incorporates any portion of the Source Code, whether modified, translated, transformed, annotated, or elaborated upon, as defined under applicable copyright law.
+                    </div>
+
+                    <div class="definition-item">
+                        <span class="definition-term">"Licensor"</span> means Romanus de DRAVO, author, creator, and sole owner of all rights, title, and interest in and to the Software.
+                    </div>
+
+                    <div class="definition-item">
+                        <span class="definition-term">"Licensee" or "You"</span> means the individual, company, or legal entity accepting this Agreement and exercising rights hereunder.
+                    </div>
+
+                    <div class="definition-item">
+                        <span class="definition-term">"Confidential Information"</span> means the Source Code of the Pro Version, all proprietary algorithms, technical documentation, and all non-public information relating to the Software, regardless of the form in which it is disclosed.
+                    </div>
+                </div>
+
+
+                <!-- ─── ARTICLE 2 ─── -->
+                <div class="article" id="art2">
+                    <div class="article-title">
+                        <span class="article-number">ART. 2</span>
+                        Scope of License — Software Versions
+                    </div>
+
+                    <p>The Software is offered in two distinct versions, each governed by different license terms as described below. The version applicable to the Licensee is determined by the license type obtained.</p>
+
+                    <table class="version-table">
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th><span class="tag-free">FREE VERSION</span></th>
+                                <th><span class="tag-pro">PRO VERSION</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CPU-based recovery</td>
+                                <td>✓ Maximum 10 threads</td>
+                                <td>✓ Unlimited threads</td>
+                            </tr>
+                            <tr>
+                                <td>GPU acceleration</td>
+                                <td>✓ Mode 1 only — max 3 missing words (benchmark)</td>
+                                <td>✓ NVIDIA &amp; AMD multi-GPU — all compatible modes</td>
+                            </tr>
+                            <tr>
+                                <td>All recovery modes (0–9)</td>
+                                <td>Limited modes only</td>
+                                <td>✓ All 10 modes</td>
+                            </tr>
+                            <tr>
+                                <td>Source code access</td>
+                                <td>✗ Binary only</td>
+                                <td>✓ Full C++/CUDA/OpenCL</td>
+                            </tr>
+                            <tr>
+                                <td>Internal modification right</td>
+                                <td>✗ Not permitted</td>
+                                <td>✓ For internal use only</td>
+                            </tr>
+                            <tr>
+                                <td>Redistribution</td>
+                                <td>✓ Binary redistribution permitted (unmodified, non-commercial, with EULA)</td>
+                                <td>✗ Strictly prohibited</td>
+                            </tr>
+                            <tr>
+                                <td>Commercial use</td>
+                                <td>✗ Not permitted</td>
+                                <td>✓ Internal only</td>
+                            </tr>
+                            <tr>
+                                <td>Cost</td>
+                                <td>Free of charge</td>
+                                <td>Commercial license fee</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <!-- ─── ARTICLE 3 ─── -->
+                <div class="article" id="art3">
+                    <div class="article-title">
+                        <span class="article-number">ART. 3</span>
+                        Grant of License
+                    </div>
+
+                    <p>Subject to the terms and conditions of this Agreement, the Licensor hereby grants to the Licensee the following non-exclusive, non-transferable, non-sublicensable rights:</p>
+
+                    <p><strong>3.1 Free Version License.</strong> Upon acceptance of this Agreement, Licensee is granted a limited, revocable, non-exclusive, non-transferable right to:</p>
+                    <ul class="clause-list">
+                        <li data-n="(a)">install and execute the Free Version binary on computers owned or leased by Licensee;</li>
+                        <li data-n="(b)">use the Software solely for personal or internal business purposes of recovering access to cryptocurrency wallets that are legally owned by Licensee;</li>
+                        <li data-n="(c)">make one (1) archival backup copy of the Free Version binary for disaster recovery purposes, provided the copy retains all copyright and proprietary notices;</li>
+                        <li data-n="(d)">redistribute and share the Free Version binary with third parties at no charge, provided that: (i) the binary is redistributed in its original, unmodified form; (ii) this Agreement in its entirety is included with or made accessible alongside every redistribution; (iii) no fee, compensation, or commercial benefit of any kind is charged or received in exchange for the redistribution; (iv) the redistribution does not constitute a commercial service offering or SaaS arrangement as described in Article 4.4; and (v) the Licensee does not misrepresent the Software or remove or alter any copyright, trademark, or proprietary notices.</li>
+                    </ul>
+
+                    <p><strong>3.2 Pro Version License.</strong> Upon payment of the applicable license fee and acceptance of this Agreement, Licensee is granted a limited, revocable, non-exclusive, non-transferable right to:</p>
+                    <ul class="clause-list">
+                        <li data-n="(a)">install and execute the Pro Version on computers owned or leased by Licensee;</li>
+                        <li data-n="(b)">use the Software with full GPU acceleration, unlimited threading, and all recovery modes, solely for Internal Use;</li>
+                        <li data-n="(c)">access, read, and study the Source Code included with the Pro Version;</li>
+                        <li data-n="(d)">modify the Source Code for Internal Use only, subject to Article 5 of this Agreement;</li>
+                        <li data-n="(e)">compile and execute Derivative Works of the Source Code exclusively for Internal Use;</li>
+                        <li data-n="(f)">make a reasonable number of archival backup copies of the Source Code and binaries for the Licensee's own internal backup purposes, provided that all such copies bear all original copyright and proprietary notices.</li>
+                    </ul>
+
+                    <p><strong>3.3 No Implied Rights.</strong> Except as expressly set forth in this Article 3, no other rights are granted, and no other use is authorized. All rights not expressly granted herein are reserved exclusively to the Licensor.</p>
+                </div>
+
+
+                <!-- ─── ARTICLE 4 ─── -->
+                <div class="article" id="art4">
+                    <div class="article-title">
+                        <span class="article-number">ART. 4</span>
+                        Restrictions and Prohibited Uses
+                    </div>
+
+                    <p>The following restrictions apply to both versions of the Software unless otherwise explicitly stated. Violations of these restrictions constitute a material breach of this Agreement and may subject Licensee to civil and criminal liability.</p>
+
+                    <div class="permission-grid">
+                        <div class="perm-box allowed">
+                            <h4>✓ Permitted Uses</h4>
+                            <ul>
+                                <li>Personal wallet recovery (own wallets)</li>
+                                <li>Internal business recovery operations</li>
+                                <li>Internal modifications (Pro Version only)</li>
+                                <li>Archival backup copies</li>
+                                <li>Free Version binary sharing (unmodified, non-commercial, with EULA)</li>
+                                <li>GPU acceleration — Mode 1 only, max 3 missing words (Free Version)</li>
+                                <li>Academic study of algorithms (Pro)</li>
+                                <li>Integration into internal workflows (Pro)</li>
+                            </ul>
+                        </div>
+                        <div class="perm-box prohibited">
+                            <h4>✗ Strictly Prohibited</h4>
+                            <ul>
+                                <li>Redistribution of the Pro Version or Source Code</li>
+                                <li>Commercial redistribution or resale of the Free Version</li>
+                                <li>Redistributing the Free Version without this EULA</li>
+                                <li>Sublicensing or assignment of rights</li>
+                                <li>Publication of source code</li>
+                                <li>Commercial resale or service offering</li>
+                                <li>Reverse engineering (Free Version)</li>
+                                <li>Unauthorized wallet access</li>
+                                <li>Automated or batch distribution</li>
+                                <li>Hosting as a service (SaaS)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <p><strong>4.1 Redistribution — Free Version Exception.</strong> Notwithstanding any other provision of this Agreement, Licensee is expressly permitted to redistribute the <em>unmodified Free Version binary</em> to third parties at no charge, subject to the conditions set forth in Article 3.1(d). Except as expressly permitted in Article 3.1(d), Licensee shall not, under any circumstances, distribute, publish, transmit, sublicense, sell, rent, lease, lend, disclose, transfer, upload, post, or otherwise make available (i) the Pro Version, (ii) the Source Code, (iii) any Derivative Work, or (iv) any modified form of the Software, in whole or in part, to any third party, through any medium or channel, including without limitation online repositories (e.g., GitHub, GitLab, BitBucket), file-sharing platforms, cloud storage, email, or physical media. Any redistribution of the Free Version binary must be accompanied by this Agreement in its entirety and must be carried out without commercial consideration of any kind.</p>
+
+                    <p><strong>4.2 No Reverse Engineering (Free Version).</strong> Licensee of the Free Version shall not reverse engineer, decompile, disassemble, translate, or attempt to derive the source code or underlying algorithms of the Software.</p>
+
+                    <p><strong>4.3 No Sublicensing.</strong> Licensee shall not sublicense, assign, transfer, or otherwise convey its rights under this Agreement to any third party without the prior written consent of the Licensor. Any purported assignment without such consent shall be null and void.</p>
+
+                    <p><strong>4.4 No Commercial Service.</strong> Licensee shall not use the Software to Software-as-a-Service (SaaS) offerings.</p>
+
+                    <p><strong>4.5 Thread Limitation (Free Version).</strong> Licensee of the Free Version shall not attempt to circumvent, modify, bypass, or remove the built-in ten (10) thread limitation of the Free Version, whether by technical means, code modification, or any other method. Such circumvention constitutes unauthorized use and a material breach of this Agreement.</p>
+
+                    <p><strong>4.6 GPU Limitation (Free Version).</strong> The Free Version includes GPU acceleration exclusively for Recovery Mode 1 (Mnemonic Brute Force), limited to a maximum of three (3) unknown word positions. This feature is provided solely for the purpose of benchmarking GPU performance. Licensee of the Free Version shall not attempt to circumvent, modify, bypass, or remove this limitation, whether by technical means, code modification, patching, or any other method. Any use of the Free Version's GPU capability beyond the permitted scope — including any attempt to process four (4) or more unknown positions, or to use GPU acceleration in any mode other than Mode 1 — constitutes a material breach of this Agreement.</p>
+
+                    <p><strong>4.7 Lawful Use Only.</strong> Licensee shall use the Software exclusively to recover access to cryptocurrency wallets for which Licensee holds legal ownership or has explicit, documented written authorization from the legal owner. Any use of the Software to access wallets owned by a third party without express authorization is strictly prohibited and may constitute criminal activity under applicable law.</p>
+
+                    <div class="notice-box danger">
+                        <h4>⛔ Critical Warning</h4>
+                        <p>Any redistribution, sharing, or publication of the wrecover <strong>Source Code</strong> or <strong>Pro Version binary</strong> — whether modified or unmodified — is a <strong>material breach</strong> of this Agreement and an infringement of applicable copyright law. Permitted redistribution of the Free Version binary (Article 3.1(d)) does <em>not</em> trigger this provision provided all conditions of Article 3.1(d) are met. The Licensor actively monitors code repositories, forums, and file-sharing platforms, and will pursue all available legal remedies, including injunctive relief, statutory damages, and attorney's fees, against any party found to be in violation.</p>
+                    </div>
+                </div>
+
+
+                <!-- ─── ARTICLE 5 ─── -->
+                <div class="article" id="art5">
+                    <div class="article-title">
+                        <span class="article-number">ART. 5</span>
+                        Source Code — Pro Version Specific Terms
+                    </div>
+
+                    <p>This Article 5 applies exclusively to Licensees holding a valid Pro Version license and shall govern all rights and obligations with respect to the Source Code.</p>
+
+                    <p><strong>5.1 Permitted Modifications.</strong> Licensee holding a valid Pro Version license is permitted to:</p>
+                    <ul class="clause-list">
+                        <li data-n="(a)">read, study, and analyze the Source Code;</li>
+                        <li data-n="(b)">modify the Source Code to customize the Software's behavior, add features, or fix defects, strictly for Internal Use by the Licensee's organization;</li>
+                        <li data-n="(c)">compile Derivative Works from the Source Code and deploy them exclusively within Licensee's own computing environment;</li>
+                        <li data-n="(d)">integrate the Software or Derivative Works into Licensee's internal workflows, scripts, or automated recovery pipelines, provided such integration remains strictly within Licensee's organization.</li>
+                    </ul>
+
+                    <p><strong>5.2 Prohibited Actions with Source Code.</strong> Notwithstanding the rights granted in Section 5.1, Licensee shall not under any circumstances:</p>
+                    <ul class="clause-list">
+                        <li data-n="(a)">share, transmit, publish, post, upload, or otherwise distribute the Source Code or any Derivative Work to any third party, whether an individual, company, open-source community, or otherwise;</li>
+                        <li data-n="(b)">commit, push, or otherwise upload the Source Code or Derivative Works to any public or private code repository (including GitHub, GitLab, Bitbucket, or any similar platform);</li>
+                        <li data-n="(c)">make the Source Code or Derivative Works accessible to any person or system outside of Licensee's organization, including contractors, clients, or affiliated entities, without prior written consent from the Licensor;</li>
+                        <li data-n="(d)">use the Source Code or Derivative Works to create a competing product, service, or utility;</li>
+                        <li data-n="(e)">remove, alter, or obscure any copyright notices, proprietary legends, or attribution notices contained within the Source Code.</li>
+                    </ul>
+
+                    <p><strong>5.3 Ownership of Modifications.</strong> Licensee acknowledges and agrees that all Derivative Works created from the Source Code remain the exclusive intellectual property of the Licensor to the extent they are based upon or derived from the original Source Code. The Licensor retains all rights, title, and interest in and to the underlying Software and all original elements. Licensee shall retain no proprietary interest in Derivative Works other than the right of Internal Use as granted herein.</p>
+
+                    <p><strong>5.4 Identification of Modifications.</strong> Licensee is encouraged to clearly mark modified files with the date of modification and a brief description of the changes, for the purposes of internal version control and audit. Such marking shall not affect ownership under Section 5.3.</p>
+
+                    <div class="notice-box warning">
+                        <h4>⚠ Reminder</h4>
+                        <p>The Pro Version Source Code is provided exclusively to enable customization for the Licensee's own internal workflows. It is not provided under any open-source license. The ability to modify does not imply any right to distribute, share, or publish such modifications. The Licensor expressly prohibits any external disclosure of the Source Code under any circumstances.</p>
+                    </div>
+                </div>
+
+
+                <!-- ─── ARTICLE 6 ─── -->
+                <div class="article" id="art6">
+                    <div class="article-title">
+                        <span class="article-number">ART. 6</span>
+                        Intellectual Property Rights
+                    </div>
+
+                    <p><strong>6.1 Ownership.</strong> The Software, including but not limited to its source code, object code, binaries, algorithms, data structures, user interface design, documentation, and all copies or Derivative Works thereof, is and shall remain the exclusive intellectual property of Romanus de DRAVO. The Software is protected by copyright law, trade secret law, and other applicable national and international intellectual property laws and treaties.</p>
+
+                    <p><strong>6.2 No Transfer of Ownership.</strong> This Agreement grants Licensee a limited license to use the Software as specifically described herein. It does not and shall not be construed as a sale, transfer, assignment, or conveyance of any ownership interest, intellectual property right, title, or proprietary interest in or to the Software or any portion thereof.</p>
+
+                    <p><strong>6.3 Copyright Notices.</strong> Licensee shall not remove, alter, cover, or obfuscate any copyright notice, trademark, patent marking, proprietary rights notice, or other legal legend displayed or contained within the Software, its documentation, or any copies thereof.</p>
+
+                    <p><strong>6.4 Trademarks.</strong> The name "wrecover" and any associated logos are trademarks of Romanus de DRAVO. Licensee is not granted any rights to use such trademarks without the Licensor's prior written consent.</p>
+
+                    <p><strong>6.5 Feedback.</strong> If Licensee provides the Licensor with any suggestions, enhancement requests, recommendations, corrections, or other feedback regarding the Software ("Feedback"), Licensee hereby grants the Licensor a perpetual, irrevocable, worldwide, royalty-free license to use, reproduce, modify, and incorporate such Feedback into the Software without restriction.</p>
+                </div>
+
+
+                <!-- ─── ARTICLE 7 ─── -->
+                <div class="article" id="art7">
+                    <div class="article-title">
+                        <span class="article-number">ART. 7</span>
+                        Confidentiality — Pro Version
+                    </div>
+
+                    <p><strong>7.1 Confidential Treatment.</strong> The Licensee of the Pro Version acknowledges that the Source Code and all related technical documentation constitute valuable Confidential Information and trade secrets of the Licensor. Licensee agrees to:</p>
+                    <ul class="clause-list">
+                        <li data-n="(a)">maintain the Source Code and all Confidential Information in strict confidence using at least the same degree of care it uses to protect its own most sensitive confidential information, but in no event less than reasonable care;</li>
+                        <li data-n="(b)">not disclose, publish, distribute, transfer, or otherwise make available the Confidential Information to any third party;</li>
+                        <li data-n="(c)">restrict access to the Confidential Information to those employees or internal contractors who have a legitimate need to access it for Internal Use purposes and who have been informed of and are bound by confidentiality obligations at least as protective as those in this Agreement;</li>
+                        <li data-n="(d)">promptly notify the Licensor in writing upon becoming aware of any unauthorized disclosure, breach, or suspected breach of confidentiality, and cooperate fully with the Licensor in addressing such breach.</li>
+                    </ul>
+
+                    <p><strong>7.2 Duration of Confidentiality.</strong> The obligations of confidentiality set forth in Section 7.1 shall apply for the duration of this Agreement and shall survive termination or expiration of this Agreement for a period of five (5) years thereafter, or for the duration of applicable trade secret protection under applicable law, whichever is longer.</p>
+
+                    <p><strong>7.3 Injunctive Relief.</strong> Licensee acknowledges that any breach of the confidentiality obligations contained herein would cause irreparable harm to the Licensor for which monetary damages would be inadequate. Accordingly, the Licensor shall be entitled to seek equitable relief, including injunction and specific performance, in addition to all other remedies available at law, without the requirement to post any bond or other security.</p>
+                </div>
+
+
+                <!-- ─── ARTICLE 8 ─── -->
+                <div class="article" id="art8">
+                    <div class="article-title">
+                        <span class="article-number">ART. 8</span>
+                        Privacy and Data Processing
+                    </div>
+
+                    <p><strong>8.1 Local Processing.</strong> The Software performs all cryptocurrency wallet recovery operations entirely on the Licensee's local hardware. No wallet data, seed phrases, passphrases, private keys, or recovery results are transmitted to the Licensor or any third-party server. The Licensor does not collect, store, or process any personal or financial data through the Software.</p>
+
+                    <p><strong>8.2 Licensee's Responsibility.</strong> Licensee is solely and exclusively responsible for the security, confidentiality, and integrity of all wallet data, seed phrases, private keys, recovery session files, and any other sensitive information processed using the Software. The Licensor expressly disclaims all responsibility for any loss, theft, or unauthorized disclosure of such information arising from Licensee's use of the Software.</p>
+
+                    <p><strong>8.3 License Registration.</strong> The Licensor may collect and process registration information (such as name and email address) provided by Licensee during the license purchase process solely for the purpose of administering the license relationship. Such data shall be processed in accordance with applicable data protection legislation.</p>
+                </div>
+
+
+                <!-- ─── ARTICLE 9 ─── -->
+                <div class="article" id="art9">
+                    <div class="article-title">
+                        <span class="article-number">ART. 9</span>
+                        Disclaimer of Warranties
+                    </div>
+
+                    <p><strong>THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE," WITHOUT WARRANTY OF ANY KIND, EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.</strong> TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE LICENSOR EXPRESSLY DISCLAIMS ALL WARRANTIES, INCLUDING BUT NOT LIMITED TO:</p>
+                    <ul class="clause-list">
+                        <li data-n="(a)">any implied warranty of merchantability, fitness for a particular purpose, or non-infringement;</li>
+                        <li data-n="(b)">any warranty that the Software will meet Licensee's requirements or produce any particular result;</li>
+                        <li data-n="(c)">any warranty that the Software will be error-free, uninterrupted, secure, or free of viruses or other harmful components;</li>
+                        <li data-n="(d)">any warranty with respect to the accuracy, reliability, or completeness of any output, result, or recovery performed by the Software;</li>
+                        <li data-n="(e)">any warranty that all defects or errors in the Software can or will be corrected.</li>
+                    </ul>
+
+                    <div class="notice-box info">
+                        <h4>ℹ Notice</h4>
+                        <p>The Software is a technical tool intended to assist in the recovery of cryptocurrency wallets. No guarantee of successful recovery is made or implied. The outcome of any recovery attempt depends entirely on factors outside the Licensor's control, including but not limited to the nature of the encryption, the quality of the information provided, and the hardware used.</p>
+                    </div>
+                </div>
+
+
+                <!-- ─── ARTICLE 10 ─── -->
+                <div class="article" id="art10">
+                    <div class="article-title">
+                        <span class="article-number">ART. 10</span>
+                        Limitation of Liability
+                    </div>
+
+                    <p><strong>10.1 Exclusion of Consequential Damages.</strong> TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL THE LICENSOR BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, PUNITIVE, OR EXEMPLARY DAMAGES, INCLUDING BUT NOT LIMITED TO: LOSS OF PROFITS, LOSS OF DATA, LOSS OF CRYPTOCURRENCY ASSETS, BUSINESS INTERRUPTION, LOSS OF GOODWILL, OR COSTS OF PROCURING SUBSTITUTE SOFTWARE OR SERVICES, ARISING OUT OF OR IN CONNECTION WITH THIS AGREEMENT OR THE USE OR INABILITY TO USE THE SOFTWARE, EVEN IF THE LICENSOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
+
+                    <p><strong>10.2 Aggregate Liability Cap.</strong> The Licensor's total aggregate liability to Licensee for all claims under this Agreement, whether in contract, tort, or otherwise, shall not exceed the amount actually paid by Licensee for the Software in the twelve (12) months preceding the claim.</p>
+
+                    <p><strong>10.3 Essential Basis.</strong> The parties acknowledge that the limitations of liability set forth in this Article 10 reflect a reasonable allocation of risk and form an essential basis of the bargain between the parties, without which the Licensor would not have entered into this Agreement.</p>
+                </div>
+
+
+                <!-- ─── ARTICLE 11 ─── -->
+                <div class="article" id="art11">
+                    <div class="article-title">
+                        <span class="article-number">ART. 11</span>
+                        Term and Termination
+                    </div>
+
+                    <p><strong>11.1 Term.</strong> This Agreement is effective from the date of first use or installation and shall continue in force unless earlier terminated as set forth herein.</p>
+
+                    <p><strong>11.2 Termination for Breach.</strong> This Agreement and the license granted hereunder shall terminate automatically and without notice in the event of any material breach by Licensee, including but not limited to: unauthorized redistribution of the Pro Version or Source Code, redistribution of the Free Version in violation of the conditions set forth in Article 3.1(d) (including redistribution for commercial consideration or without this Agreement), violation of the thread limitation, violation of the GPU limitation set forth in Article 4.6, circumvention of technical protection measures, breach of confidentiality obligations, or use of the Software for unlawful purposes.</p>
+
+                    <p><strong>11.3 Termination by Licensor.</strong> The Licensor reserves the right to terminate this Agreement upon thirty (30) days' written notice to Licensee for any reason, in which case the Licensor shall refund a pro-rated portion of any license fees paid for unexpired periods (Pro Version only).</p>
+
+                    <p><strong>11.4 Effect of Termination.</strong> Upon termination of this Agreement for any reason:</p>
+                    <ul class="clause-list">
+                        <li data-n="(a)">all rights and licenses granted under this Agreement shall immediately cease;</li>
+                        <li data-n="(b)">Licensee shall immediately cease all use of the Software and permanently delete all copies of the Software, Source Code, and any Derivative Works from all Licensee's systems and storage media;</li>
+                        <li data-n="(c)">Licensee shall, upon the Licensor's written request, certify in writing that all copies have been destroyed.</li>
+                    </ul>
+
+                    <p><strong>11.5 Survival.</strong> Articles 1, 4, 5.2, 5.3, 6, 7, 9, 10, 11.4, 12, and 13 shall survive any termination or expiration of this Agreement.</p>
+                </div>
+
+
+                <!-- ─── ARTICLE 12 ─── -->
+                <div class="article" id="art12">
+                    <div class="article-title">
+                        <span class="article-number">ART. 12</span>
+                        General Provisions
+                    </div>
+
+                    <p><strong>12.1 Entire Agreement.</strong> This Agreement constitutes the entire agreement between the parties with respect to its subject matter and supersedes all prior and contemporaneous agreements, representations, warranties, and understandings, whether oral or written, relating to the Software.</p>
+
+                    <p><strong>12.2 Amendments.</strong> The Licensor reserves the right to amend this Agreement at any time by posting an updated version. Continued use of the Software following notice of such amendment constitutes acceptance of the amended terms. Material amendments shall be communicated to registered Pro Version Licensees by email.</p>
+
+                    <p><strong>12.3 Severability.</strong> If any provision of this Agreement is held by a court of competent jurisdiction to be invalid, illegal, or unenforceable, such provision shall be modified to the minimum extent necessary to make it enforceable, and the remaining provisions of this Agreement shall continue in full force and effect.</p>
+
+                    <p><strong>12.4 Waiver.</strong> The failure of either party to enforce any right or provision of this Agreement shall not constitute a waiver of such right or provision. Any waiver must be in writing and signed by the waiving party to be effective.</p>
+
+                    <p><strong>12.5 Export Compliance.</strong> Licensee shall comply with all applicable export control laws, regulations, and orders in connection with the use and distribution (where permitted) of the Software, and shall not export, re-export, or transfer the Software or any direct product thereof to any prohibited destination, person, or entity.</p>
+
+                    <p><strong>12.6 Injunctive Relief.</strong> Licensee acknowledges that a breach of Articles 4, 5, 6, or 7 of this Agreement would cause irreparable harm for which monetary damages would be an inadequate remedy, and the Licensor shall be entitled to seek immediate injunctive or other equitable relief in addition to all other remedies available at law or in equity.</p>
+
+                    <p><strong>12.7 Language.</strong> This Agreement is written in the English language, which shall be the controlling language for all purposes. Any translation is provided for convenience only and shall have no legal effect.</p>
+                </div>
+
+                <!-- ─── ARTICLE 13 ─── -->
+                <div class="article" id="art13">
+                    <div class="article-title">
+                        <span class="article-number">ART. 13</span>
+                        Acceptance and Acknowledgment
+                    </div>
+
+                    <p>BY INSTALLING, COPYING, DOWNLOADING, ACCESSING, OR OTHERWISE USING THE wrecover SOFTWARE, LICENSEE ACKNOWLEDGES THAT:</p>
+                    <ul class="clause-list">
+                        <li data-n="(a)">Licensee has read and fully understood this Agreement;</li>
+                        <li data-n="(b)">Licensee has the legal capacity and authority to enter into this Agreement, and if acting on behalf of a legal entity, is duly authorized to bind such entity;</li>
+                        <li data-n="(c)">Licensee agrees to be bound by all terms and conditions of this Agreement;</li>
+                        <li data-n="(d)">Licensee understands that the Software shall be used solely to recover wallets Licensee legally owns or has explicit written authorization to access;</li>
+                        <li data-n="(e)">Licensee understands and accepts that any violation of Articles 4, 5, or 7 constitutes a material breach and will result in immediate termination of the license and may subject Licensee to legal proceedings. This includes, without limitation, circumvention of the thread limitation (Article 4.5) or the GPU limitation (Article 4.6) of the Free Version.</li>
+                    </ul>
+
+                    <div class="notice-box info">
+                        <h4>ℹ If You Do Not Agree</h4>
+                        <p>If you do not agree to the terms and conditions of this Agreement, you must not install, use, or access the Software. You must immediately uninstall and permanently delete all copies of the Software from your systems and cease any further use.</p>
+                    </div>
+                </div>
+
+            </div><!-- .doc-body -->
+
+
+            <!-- Document footer -->
+            <footer class="doc-footer">
+                <span>© 2026 Romanus de DRAVO — All Rights Reserved</span>
+                <span class="confidential">Confidential &amp; Proprietary</span>
+                <span>wrecover EULA v1.0 — WRCV-EULA-2026-v1.0</span>
+            </footer>
+
+        </div><!-- .document -->
+    </div><!-- .page-wrapper -->
+
+    <script>
+    (function(){
+        var hbg=document.getElementById('hamburger');
+        var nav=document.getElementById('navLinksMenu');
+        var ovl=document.getElementById('navOverlay');
+        if(!hbg||!nav||!ovl) return;
+        function toggle(open){
+            hbg.classList.toggle('open',open);
+            nav.classList.toggle('nav-open',open);
+            ovl.classList.toggle('active',open);
+            hbg.setAttribute('aria-expanded',String(open));
+            document.body.style.overflow=open?'hidden':'';
+        }
+        hbg.addEventListener('click',function(){ toggle(!nav.classList.contains('nav-open')); });
+        ovl.addEventListener('click',function(){ toggle(false); });
+        nav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ toggle(false); }); });
+    })();
+    </script>
+</body>
+</html>
